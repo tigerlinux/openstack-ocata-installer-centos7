@@ -1,0 +1,46 @@
+ALERT !!
+
+Installing Manila and/or Designate on both Centos 7 and Ubuntu 16.04lts breaks
+the horizon Dashboard. After installing those components, logging to the web 
+dashboard is impossible.
+
+The current workaround for both operating systems is disable offline compression
+in the horizon dashboard.
+
+On Centos, edit the following file:
+
+vi /usr/share/openstack-dashboard/openstack_dashboard/settings.py
+
+And set COMPRESS_OFFLINE to False:
+
+COMPRESS_OFFLINE = False
+
+On Ubuntu 16.04lts, the procedure is almost the same. Edit the following file:
+
+vi /etc/openstack-dashboard/local_settings.py
+
+And set COMPRESS_OFFLINE to False:
+
+COMPRESS_OFFLINE = False
+
+On both systems, as a "failsafe", manually compress the horizon files by using
+the following commands:
+
+On Centos 7:
+
+cd /usr/share/openstack-dashboard/
+python manage.py compress --force
+python manage.py collectstatic --noinput
+
+systemctl restart httpd
+
+
+On Ubuntu 16.04lts:
+
+cd /usr/share/openstack-dashboard/
+python manage.py compress --force
+python manage.py collectstatic --noinput
+
+systemctl restart apache2
+
+END.-

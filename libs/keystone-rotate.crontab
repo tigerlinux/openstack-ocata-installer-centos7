@@ -1,0 +1,10 @@
+#
+# Unattended installer for OpenStack.
+# Reynaldo R. Martinez P.
+# E-Mail: TigerLinux@Gmail.com
+#
+# Keystone FERNET rotation crontab
+# Keys are rotated every day at 02:05am
+#
+
+05 02 * * * root /usr/bin/keystone-manage fernet_rotate --keystone-user keystone --keystone-group keystone > /var/log/keystone-tokens-rotate.log

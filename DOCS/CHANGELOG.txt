@@ -1,0 +1,32 @@
+1.0.0.el7 - March 24, 2017
+
+- All modules adapted to OpenStack Rel 15 "Ocata".
+- MongoDB fully deprecated in favor of GNOCCHI. All
+  needed configurations and installation actions are
+  performed by ceilometer install module, which also
+  installs and configure gnocchi.
+- As a result of gnocchi introduction, all metric re-
+  lated functions are performed by gnocchi. This also
+  include client interactions, that need to be per-
+  formed using openstack client instead of old ceilo-
+  metet client.
+- Because we are using gnocchi now, ceilometer end-
+  points in keystone are no longer needed (so they are
+  not created). Also, the ceilometer-api is not con-
+  figured either. All metric and events are now con-
+  sumed trough gnocchi and aodh clients using the
+  python openstack cli.
+- CELLS setup included in the installer. Because now
+  cell setup is "mandatory" for nova, our installer
+  takes the apropiate steps to install and configure
+  all needed support, including the new cell db.
+- New placement api included in nova setup. The API is
+  served trough a WSGI using apache.
+- Some API's are using apache now (trough wsgi). Those
+  include:
+  * aodh-api.
+  * placement-api (part of nova now).
+  * cinder-api (only in Ubuntu based installs).
+  * gnocchi-api.
+- Designate install module adjusted to use the worker/
+  producer model.

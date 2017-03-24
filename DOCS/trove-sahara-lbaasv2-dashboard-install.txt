@@ -1,0 +1,83 @@
+The actual "openstack dashboard" packages in Ubuntu and Centos (for Newton release)
+does not contains all the panels for the non-core projects. Also the "lbaasv2" panel
+is missing from Ubuntu 1604lts. Fortunatelly, those panels are very easy to install.
+Follow the next procedures in order to install them in the horizon machine 
+(normally, the controller or all-in-one openstack server):
+
+
+INSTRUCTIONS FOR CENTOS 7 BASED OPENSTACK NEWTON DASHBOARD PANELS (DESIGNATE):
+
+Please execute the following commands logged with the "root" account:
+
+DESIGNATE:
+
+yum -y install git git python-pip
+
+cd /usr/local/src
+git clone https://github.com/openstack/designate-dashboard
+cd /usr/local/src/designate-dashboard
+git checkout stable/newton
+pip install -e ./
+cp /usr/local/src/designate-dashboard/designatedashboard/enabled/* /usr/share/openstack-dashboard/openstack_dashboard/local/enabled/
+cd /usr/share/openstack-dashboard/
+python manage.py compress --force
+python manage.py collectstatic --noinput
+
+systemctl restart httpd
+
+
+
+INSTRUCTIONS FOR UBUNTU 16.04LTS BASED OPENSTACK NEWTON DASHBOARD PANELS (MANILA, AND LBAASV2):
+
+Please execute the following commands logged with the "root" account:
+
+LBAASV2 Neutron Panels:
+
+apt-get install -y git python-pip
+
+cd /usr/local/src
+git clone https://github.com/openstack/neutron-lbaas-dashboard
+cd /usr/local/src/neutron-lbaas-dashboard
+git checkout stable/newton
+pip install -e ./
+cp /usr/local/src/neutron-lbaas-dashboard/neutron_lbaas_dashboard/enabled/_1481_* /usr/share/openstack-dashboard/openstack_dashboard/local/enabled/
+
+cd /usr/share/openstack-dashboard/
+python manage.py compress --force
+python manage.py collectstatic --noinput
+
+/etc/init.d/apache2 restart
+
+
+MANILA:
+
+apt-get -y install git python-pip
+
+cd /usr/local/src
+git clone https://github.com/openstack/manila-ui
+cd /usr/local/src/manila-ui/
+git checkout stable/newton
+pip install -e ./
+cp /usr/local/src/manila-ui/manila_ui/enabled/* /usr/share/openstack-dashboard/openstack_dashboard/local/enabled/
+cd /usr/share/openstack-dashboard/
+python manage.py compress --force
+python manage.py collectstatic --noinput
+
+/etc/init.d/apache2 restart
+
+NOTE: The packaged version of the manila-ui seems to be broken. The git version is
+working OK though.
+
+
+FINAL NOTES:
+
+Only intall those extra panels if you have the relevant components installed (mean, do 
+not install them if you don't have manila, designate, or neutron installed).
+
+If your dashboard stop working properlly after installing those dashboard's, you will have
+to apply the "COMPRESS_OFFLINE = False" workaround described in the following files inside
+the DOCS directory of our installer:
+
+ALERT-Designate-Manila-and-Horizon.txt
+
+END.-
