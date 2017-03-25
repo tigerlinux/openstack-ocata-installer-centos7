@@ -1,3 +1,11 @@
+1.0.1.el7 - March 25, 2017
+
+- Fully removed glusterfs cinder volume backend option.
+  The driver was deprecated (but still available) on
+  Newton release, but completelly removed on Ocata.
+- Added snapshoot and qcow support on our implementation
+  of the NFS driver on Cinder.
+
 1.0.0.el7 - March 24, 2017
 
 - All modules adapted to OpenStack Rel 15 "Ocata".

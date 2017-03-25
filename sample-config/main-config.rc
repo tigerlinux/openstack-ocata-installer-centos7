@@ -5,8 +5,8 @@
 # E-Mail: TigerLinux@Gmail.com
 #
 # Main Configuration
-# Version: 1.0.0.el7 "Siberian Lynx"
-# March 24, 2017
+# Version: 1.0.1.el7 "Siberian Lynx"
+# March 25, 2017
 #
 
 #
@@ -339,14 +339,6 @@ extracinderhosts=""
 # The next variable controls if you want to clean-up all lv's at uninstall time.
 # the default is "yes", meaning, all lv's in the cinder-volumes vg will be erased.
 cindercleanatuninstall="yes"
-#
-# If you want to include glusterfs backend, change the following variable to "yes"
-#
-cinderconfigglusterfs="no"
-#
-# Also, change the gluster resource for openstack. Tipically, an IP or FQND followed
-# by ":/" and the resource name:
-glusterfsresource="192.168.1.1:/openstack"
 #
 # If you want to include nfs backend, change the following variable to "yes"
 #
