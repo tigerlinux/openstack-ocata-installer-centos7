@@ -149,7 +149,6 @@ crudini --set /etc/cinder/cinder.conf DEFAULT enabled_backends ""
 # Cinder GlusterFS support was available up to Newton (but in deprecated state)
 # It has been removed competelly from Ocata
 #
-cinderconfigglusterfs="no"
 
 if [ $cindernodetype == "allinone" ] || [ $cindernodetype == "storage" ]
 then
@@ -164,18 +163,18 @@ then
 		crudini --set /etc/cinder/cinder.conf lvm-$cindernodehost volume_backend_name LVM_iSCSI-$cindernodehost
 	fi
 
-	if [ $cinderconfigglusterfs == "yes" ]
-	then
-		# crudini --set /etc/cinder/cinder.conf glusterfs-$cindernodehost volume_driver "cinder.volume.drivers.glusterfs.GlusterfsDriver"
-		# crudini --set /etc/cinder/cinder.conf glusterfs-$cindernodehost glusterfs_shares_config "/etc/cinder/glusterfs_shares"
-		# crudini --set /etc/cinder/cinder.conf glusterfs-$cindernodehost glusterfs_mount_point_base "/var/lib/cinder/glusterfs"
-		# crudini --set /etc/cinder/cinder.conf glusterfs-$cindernodehost nas_volume_prov_type thin
-		# crudini --set /etc/cinder/cinder.conf glusterfs-$cindernodehost glusterfs_disk_util df
-		# crudini --set /etc/cinder/cinder.conf glusterfs-$cindernodehost glusterfs_qcow2_volumes True
-		# crudini --set /etc/cinder/cinder.conf glusterfs-$cindernodehost volume_backend_name GLUSTERFS-$cindernodehost
-		# echo $glusterfsresource > /etc/cinder/glusterfs_shares
-		# chown cinder.cinder /etc/cinder/glusterfs_shares
-	fi
+	#if [ $cinderconfigglusterfs == "yes" ]
+	#then
+	#	# crudini --set /etc/cinder/cinder.conf glusterfs-$cindernodehost volume_driver "cinder.volume.drivers.glusterfs.GlusterfsDriver"
+	#	# crudini --set /etc/cinder/cinder.conf glusterfs-$cindernodehost glusterfs_shares_config "/etc/cinder/glusterfs_shares"
+	#	# crudini --set /etc/cinder/cinder.conf glusterfs-$cindernodehost glusterfs_mount_point_base "/var/lib/cinder/glusterfs"
+	#	# crudini --set /etc/cinder/cinder.conf glusterfs-$cindernodehost nas_volume_prov_type thin
+	#	# crudini --set /etc/cinder/cinder.conf glusterfs-$cindernodehost glusterfs_disk_util df
+	#	# crudini --set /etc/cinder/cinder.conf glusterfs-$cindernodehost glusterfs_qcow2_volumes True
+	#	# crudini --set /etc/cinder/cinder.conf glusterfs-$cindernodehost volume_backend_name GLUSTERFS-$cindernodehost
+	#	# echo $glusterfsresource > /etc/cinder/glusterfs_shares
+	#	# chown cinder.cinder /etc/cinder/glusterfs_shares
+	#fi
 
 	if [ $cinderconfignfs == "yes" ]
 	then
@@ -219,14 +218,14 @@ then
 		prenfs=""
 	fi
 
-	if [ $cinderconfigglusterfs == "yes" ]
-	then
-		# prevgluster="glusterfs-$cindernodehost"
-		# backend="$prevlvm$seplvm$prevnfs$sepnfs$prevgluster"
-		prevgluster=""
-	else
-		prevgluster=""
-	fi
+	#if [ $cinderconfigglusterfs == "yes" ]
+	#then
+	#	# prevgluster="glusterfs-$cindernodehost"
+	#	# backend="$prevlvm$seplvm$prevnfs$sepnfs$prevgluster"
+	#	prevgluster=""
+	#else
+	#	prevgluster=""
+	#fi
 
 	crudini --set /etc/cinder/cinder.conf DEFAULT enabled_backends "$backend"
 fi
@@ -389,13 +388,13 @@ then
 			--description "LVM iSCSI Backend at node $cindernodehost" lvm-$cindernodehost
 	fi
 
-	if [ $cinderconfigglusterfs == "yes" ]
-	then
-		source $keystone_admin_rc_file
-		#openstack volume type create \
-		#	--property volume_backend_name=GLUSTERFS-$cindernodehost \
-		#	--description "GlusterFS Backend at node $cindernodehost" glusterfs-$cindernodehost
-	fi
+	# if [ $cinderconfigglusterfs == "yes" ]
+	#then
+	#	source $keystone_admin_rc_file
+	#	#openstack volume type create \
+	#	#	--property volume_backend_name=GLUSTERFS-$cindernodehost \
+	#	#	--description "GlusterFS Backend at node $cindernodehost" glusterfs-$cindernodehost
+	#fi
 
 	if [ $cinderconfignfs == "yes" ]
 	then
