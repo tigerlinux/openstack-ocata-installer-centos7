@@ -5,8 +5,8 @@
 # E-Mail: TigerLinux@Gmail.com
 #
 # Main Configuration
-# Version: 1.0.2.el7 "Siberian Lynx"
-# March 25, 2017
+# Version: 1.1.0.el7 "Siberian Lynx"
+# March 27, 2017
 #
 
 #
@@ -153,6 +153,10 @@ designatedbname="designatedb"
 designatedbpoolmanagerdb="designatepoolmanagerdb"
 designatedbuser="designatedbuser"
 designatedbpass="0p3nSt4ck"
+# Magnum
+magnumdbname="magnumdb"
+magnumdbuser="magnumdbuser"
+magnumdbpass="0p3nSt4ck"
 
 #
 # OPENSTACK KEYSTONE
@@ -866,6 +870,30 @@ dnssinkdomainemail="designateadmin@mydnsdomain.org"
 # Normally, this is not necessary unless your mysql service access policies are very
 # strict.
 extradesignatehosts=""
+
+
+
+#
+# OPENSTACK MAGMUN
+#
+# Install magnum on the controller only. Our default is "no", but set the following variable to "yes"
+# if you don't want to install magnum. Again: IN THE CONTROLLER !!!
+magnuminstall="no"
+# The magnum host IP: Normally, the controller IP
+magnumhost="192.168.56.60"
+# Change the password and email
+magnumuser="magnum"
+magnumsvce="magnum"
+magnumpass="0p3nSt4ck"
+magnumemail="magnum@localhost"
+magnum_domain_name="magnum"
+magnum_domain_admin="magnum_domain_admin"
+magnum_domain_admin_password="0p3nSt4ck"
+# Only if you are using MySQL as DB backend. If for any chance, you have multiple
+# magnum hosts, put here the IP address of the extra hosts, space separated.
+# Normally, this is not necessary unless your mysql service access policies are very
+# strict.
+extramagnumhosts=""
 
 
 

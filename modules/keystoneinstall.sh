@@ -461,6 +461,11 @@ then
 	./modules/keystone-designate.sh
 fi
 
+if [ $magnuminstall == "yes" ]
+then
+	./modules/keystone-magnum.sh
+fi
+
 #
 # If we define extra tenants in the installer config file, here we proceed to create them
 #

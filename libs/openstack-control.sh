@@ -296,6 +296,14 @@ else
 	)
 fi
 
+# Magnum. Index=12
+svcmagnum=(
+"
+openstack-magnum-api
+openstack-magnum-conductor
+"
+)
+
 #
 # Our Service Indexes:
 #
@@ -311,6 +319,7 @@ fi
 # Sahara = 9
 # Manila = 10
 # Designate = 11
+# Magnum = 12
 #
 
 # Now, we create a super array with all services:
@@ -327,6 +336,7 @@ servicesstart=("${servicesstart[@]}" "${svctrove[@]}")		# Index 8 - Trove
 servicesstart=("${servicesstart[@]}" "${svcsahara[@]}")		# Index 9 - Sahara
 servicesstart=("${servicesstart[@]}" "${svcmanila[@]}")         # Index 10 - Manila
 servicesstart=("${servicesstart[@]}" "${svcdesignate[@]}")	# Index 11 - Designate
+servicesstart=("${servicesstart[@]}" "${svcmagnum[@]}")		# Index 12 - Magnum
 
 moduleliststart=""
 moduleliststop=""
@@ -401,6 +411,12 @@ fi
 if [ -f /etc/openstack-control-script-config/designate ]
 then
         moduleliststart="$moduleliststart 11"
+fi
+
+# Index 12 - Designate
+if [ -f /etc/openstack-control-script-config/magnum ]
+then
+        moduleliststart="$moduleliststart 12"
 fi
 
 #
@@ -490,6 +506,13 @@ designate)
         if [ -f /etc/openstack-control-script-config/designate ]
         then
                 moduleliststart="11"
+        fi 
+        ;;
+magnum)
+        # Index 12
+        if [ -f /etc/openstack-control-script-config/magnum ]
+        then
+                moduleliststart="12"
         fi 
         ;;
 esac

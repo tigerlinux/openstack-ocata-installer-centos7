@@ -81,6 +81,11 @@ then
 	yum install -y openstack-manila-ui
 fi
 
+if [ $magnuminstall == "yes" ]
+then
+	yum install -y openstack-magnum-ui
+fi
+
 if [ $neutroninstall == "yes" ]
 then
 	yum install -y openstack-neutron-lbaas-ui

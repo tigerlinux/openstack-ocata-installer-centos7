@@ -35,13 +35,12 @@ In the version by default, the configuration file has selections modules to inst
 
 Additionally, there are some modules that are in default "no":
 
-* Ceilometer.
-* Heat.
 * Swift.
 * Trove.
 * Sahara.
 * Manila.
 * Designate.
+* Magnum.
 * SNMP.
 
 We recommend to activate swift install option "only If you are really going to use it". **Swift** alone is almost as extensive as OpenStack. Use if you REALLY know what you're doing and if you are REALLY going to use it. Remember the functions of all OpenStack modules:
@@ -52,13 +51,15 @@ We recommend to activate swift install option "only If you are really going to u
 * Swift: Object Storage Service.
 * Neutron: Networking Service
 * Nova: Compute Service.
-* Ceilometer: Metrics/Telemetry Service.
+* Ceilometer: Telemetry Service.
 * Aodh (installed along ceilometer): Alarming Service (needed if you want to create autoscaling groups with Heat Cloudformation).
+* Gnocch (installed along ceilometer): Metric as a service.
 * Heat: Orquestration/Cloudformation Service.
 * Trove: Database Service (DBaaS).
 * Sahara: Data Processing Service (Big Data).
 * Manila: File Sharing as a Service.
 * Designate: DNS as a Service.
+* Magnum: Container infra as a Service.
 
 The SNMP module installs usefull monitoring variables you can use in order to monitor OpenStack with SNMP but does not install any monitoring application. The variables are described (if you install the support) in `/etc/snmp/snmpd.conf`.
 
@@ -407,6 +408,13 @@ More information about designate:
 * http://docs.openstack.org/developer/designate/
 
 
+### Magnum
+
+"Container as a Service" OpenStack solution (known as MAGNUM) is included in our installer too. Note that, like trove, we setup the service but do not include the service images. This is a task for the OpenStack administrator. More information can be obtained from the link:
+
+- https://docs.openstack.org/project-install-guide/container-infrastructure-management/newton/launch-instance.html
+
+
 ### Support Scripts installed with this solution
 
 This installer will place a OpenStack Services control script in the “/usr/local/bin” path:
@@ -468,9 +476,9 @@ By the moment, we support the following modules:
 - sahara
 - manila
 - designate
+- magnum
 
-NOTE: aodh (Ceilometer Alarming) is managed inside "ceilometer" option, so if you call "openstack-control.sh ACTION ceilometer", the "ACTION" (stop/start/enable/disable/etc) will be applied to both ceilometer and aodh services.
-
+**NOTE: aodh (Ceilometer Alarming) and gnocchi (metric as a service) are managed inside "ceilometer" option, so if you call "openstack-control.sh ACTION ceilometer", the "ACTION" (stop/start/enable/disable/etc) will be applied to both ceilometer and aodh services. Also, note that both gnocchi-api and aodh-api are mod-wsgi-based (apache) services. If you stop ceilometer using "openstack-control.sh", you will actually stop apache and all related services working trough it (keystone included). Also, in ubuntu 1604lts, cinder-api works trough apache mod-wsgi.**
 
 ```bash
 openstack-log-cleaner.sh
@@ -497,6 +505,17 @@ NOTE: The "instance-cpu-metrics-report.sh" script has been modified in order to 
 ```bash
 instance-cpu-metrics-report.sh --help
 ```
+
+### More about apache and mod-wsgi.
+
+It's a trend !. OpenStack group is gradually migrating all it's API's services (all services exposing a REST interface) to mod-wsgi trough apache. That means in practical terms, that if you stop apache, several api services will stop working. The afected services are (by the moment):
+
+- keystone.
+- cinder-api (only in ubuntu 1604lts packages).
+- aodh-api.
+- gnocchi-api.
+
+Eventually all API's will reside inside apache (or nginx) trough any mod-wsgi solution. Please take this into consideration when doing anything with apache.
 
 
 ### Keystone Environment Admin Variables
@@ -565,6 +584,7 @@ While the main setup process "**main-installer.sh**" is responsible for calling 
 * databaseinstall.sh
 * requeriments-extras.sh (only present for Ubuntu based installations)
 * keystoneinstall.sh
+* keystone-XXXX (where XXXX is: swift, glance, cinder, neutron, nova, ceilometer, heat, trove, sahara, manila, designate, and magnum).
 * swiftinstall.sh
 * glanceinstall.sh
 * cinderinstall.sh
@@ -576,8 +596,7 @@ While the main setup process "**main-installer.sh**" is responsible for calling 
 * saharainstall.sh
 * manilainstall.sh
 * designateinstall.sh
-* manilainstall.sh
-* designateinstall.sh
+* magnuminstall.sh
 * snmpinstall.sh
 * horizoninstall.sh
 * postinstall.sh

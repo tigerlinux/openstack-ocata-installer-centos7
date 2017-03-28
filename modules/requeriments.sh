@@ -64,7 +64,16 @@ echo ""
 #
 
 yum -y clean all
-yum -y install yum-plugin-priorities yum-presto yum-plugin-changelog openstack-packstack
+yum -y install yum-plugin-priorities yum-presto yum-plugin-changelog
+
+# Fix for zeromq conflict between epel and centos cloud
+yum -y erase zeromq
+yum install -y --disablerepo=epel* zeromq
+yum -y install yum-plugin-versionlock
+yum versionlock zeromq*
+# end of fix
+
+yum -y install openstack-packstack
 yum -y groupinstall Virtualization-Platform Virtualization-tools
 yum -y install libvirt qemu kvm
 yum -y install sudo gcc cpp make automake kernel-headers

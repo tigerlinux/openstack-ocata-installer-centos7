@@ -50,6 +50,8 @@ killall -9 -u manila >/dev/null 2>&1
 killall -9 -u ceilometer >/dev/null 2>&1
 killall -9 -u aodh >/dev/null 2>&1
 killall -9 -u swift >/dev/null 2>&1
+killall -9 -u gnocchi >/dev/null 2>&1
+killall -9 -u magnum >/dev/null 2>&1
 
 #
 # We uninstall all openstack packages
@@ -80,6 +82,7 @@ yum -y erase openstack-glance \
 	openstack-sahara* \
 	openstack-manila* \
 	openstack-designate* \
+	openstack-magnum* \
 	mongodb-server \
 	mongodb \
 	haproxy \
@@ -146,6 +149,7 @@ userdel -f -r manila
 userdel -f -r designate
 userdel -f -r named
 userdel -f -r gnocchi
+userdel -f -r magnum
 
 echo "Erasing remaining files"
 
@@ -208,6 +212,10 @@ rm -fr /etc/glance \
 	/etc/designate \
 	/var/lib/designate \
 	/var/log/designate \
+	/var/oslock \
+	/var/log/magnum \
+	/var/lib/magnum \
+	/etc/magnum \
 	/etc/httpd/conf.d/wsgi-aodh.conf \
 	/etc/httpd/conf.d/wsgi-ceilometer.conf \
 	/root/keystonerc_*
