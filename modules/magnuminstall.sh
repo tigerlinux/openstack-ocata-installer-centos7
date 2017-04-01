@@ -73,6 +73,17 @@ yum install -y openstack-magnum-api \
 echo "Done"
 echo ""
 
+#
+# Fix for python2-kubernetes not present
+#
+kubepythonhere=`rpm -qa|grep kubernetes|wc -l`
+if [ $kubepythonhere == 0 ]
+then
+	yum -y install python-pip
+	pip install kubernetes
+fi
+
+
 source $keystone_admin_rc_file
 
 echo ""

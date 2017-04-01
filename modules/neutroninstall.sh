@@ -455,7 +455,7 @@ echo "#" >> /etc/neutron/plugins/ml2/ml2_conf.ini
  
 crudini --set /etc/neutron/plugins/ml2/ml2_conf.ini ml2 type_drivers "local,flat,vlan,gre,vxlan"
 crudini --set /etc/neutron/plugins/ml2/ml2_conf.ini ml2 mechanism_drivers "openvswitch,l2population"
-crudini --set /etc/neutron/plugins/ml2/ml2_conf.ini ml2 tenant_network_types "flat,vlan,gre,vxlan"
+crudini --set /etc/neutron/plugins/ml2/ml2_conf.ini ml2 tenant_network_types "$tenant_network_types"
 crudini --set /etc/neutron/plugins/ml2/ml2_conf.ini securitygroup enable_security_group True
 crudini --set /etc/neutron/plugins/ml2/ml2_conf.ini securitygroup enable_ipset True
 crudini --set /etc/neutron/plugins/ml2/ml2_conf.ini securitygroup firewall_driver neutron.agent.linux.iptables_firewall.OVSHybridIptablesFirewallDriver

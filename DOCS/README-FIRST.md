@@ -369,17 +369,13 @@ the way it should.
 
 Tips for a properlly working trove image:
 
-- Cloud init must be installed on the image and configured for start at boot time. Please eliminate "mounts" from /etc/cloud/cloud.cfg or your vm
-  will try to auto-mount the ephemeral disk. This can interfere with trove guest agent activities.
-- The trove guest agent MUST BE installed and configured in the image. Also, give sudo root-powers to the "trove" account on the glance image. The
-  guest agent perform some changes in the vm that requires root access. The trove guest agent (if installed from ubuntu/centos repositories) uses
-  a "trove" account to run.
+- Cloud init must be installed on the image and configured for start at boot time. Please eliminate "mounts" from /etc/cloud/cloud.cfg or your vm will try to auto-mount the ephemeral disk. This can interfere with trove guest agent activities.
+- The trove guest agent MUST BE installed and configured in the image. Also, give sudo root-powers to the "trove" account on the glance image. The guest agent perform some changes in the vm that requires root access. The trove guest agent (if installed from ubuntu/centos repositories) uses a "trove" account to run.
 - Install the database engine software in the glance image too. Trove guest agent can do this for you in many ways too.
-- TRICK: You can install the guest agent, configure it, create the "sudo" permissions, and install the database software vía Cloud init. You just
-  need to create a file /etc/trove/cloudinit/DATASTORE-NAME.cloudinit (sample: /etc/trove/cloudinit/mysql.cloudinit) with the commands needed to
-  do everything. This file can be any script-based languaje (sh, bash, etc.).
-- Flavors: If you plan to use locally-based storage for trove (instead of cinder-based), remember to choose a flavor for your database services
-  that contains an ephemeral disk. Trove requires an extra disk for the database.
+- TRICK: You can install the guest agent, configure it, create the "sudo" permissions, and install the database software vía Cloud init. You just need to create a file /etc/trove/cloudinit/DATASTORE-NAME.cloudinit (sample: /etc/trove/cloudinit/mysql.cloudinit) with the commands needed to do everything. This file can be any script-based languaje (sh, bash, etc.).
+- Flavors: If you plan to use locally-based storage for trove (instead of cinder-based), remember to choose a flavor for your database services that contains an ephemeral disk. Trove requires an extra disk for the database storage.
+
+Finally, note about swift: Trove requires swift for it's replicas and backups functions, so, if you want replicas of backups, ensure to install swift in your cloud.
 
 
 ### Manila
@@ -412,7 +408,9 @@ More information about designate:
 
 "Container as a Service" OpenStack solution (known as MAGNUM) is included in our installer too. Note that, like trove, we setup the service but do not include the service images. This is a task for the OpenStack administrator. More information can be obtained from the link:
 
-- https://docs.openstack.org/project-install-guide/container-infrastructure-management/newton/launch-instance.html
+- https://docs.openstack.org/project-install-guide/container-infrastructure-management/ocata/launch-instance.html
+
+Notes about component requirements: Magnum requires HEAT. It WONT WORK without HEAT !. Also, for cluster containers based on swarm and kubernetes, you'll need cinder-based persistent storage. If you also set your cluster templates with a local registry, you'll need swift too.
 
 
 ### Support Scripts installed with this solution

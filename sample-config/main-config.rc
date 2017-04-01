@@ -5,8 +5,8 @@
 # E-Mail: TigerLinux@Gmail.com
 #
 # Main Configuration
-# Version: 1.1.0.el7 "Siberian Lynx"
-# March 27, 2017
+# Version: 1.1.1.el7 "Siberian Lynx"
+# March 31, 2017
 #
 
 #
@@ -441,6 +441,15 @@ dhcp_lease_duration="-1"
 # the option in "no"
 forcegremtu="no"
 #
+# Tenant network type. Set this either to "gre" or "vxlan". Our default is "gre". Please
+# note that, for proper performance with vxlan, your network should use Jumbo Frames.
+tenant_network_types="gre"
+# NOTE: You can also set other tenant typs like local, flat or even se to multiple options
+# like: tenant_network_types="flat,vlan,gre,vxlan", but, this can bring some admin
+# problems and, specially if you plan to use MAGNUM, there will be no way to let magnun
+# to create it's container private networks with a specific type. Then, our recommendation
+# is to stick with either "gre" or "vxlan".
+#
 # If you are going to use gre or vxlan, change the following variables according
 # to your preferences
 tunnel_id_ranges="1:100"
@@ -769,6 +778,11 @@ extratrovehosts=""
 # wot work with your default datastore (see "trovedefaultds" variable above) but you can adapt
 # it to other datastores.
 #
+# NOTE about backups and replicas: Trove requires swift for backups and replicas. If you
+# want trove to make your db backups, and/or want/or/need to use replicas, then swift is
+# a mandatory component. Ensure to set "swiftinstall" to "yes" if you opt to install trove
+# and need backups and/or replicas.
+#
 
 
 
@@ -876,9 +890,16 @@ extradesignatehosts=""
 #
 # OPENSTACK MAGMUN
 #
-# Install magnum on the controller only. Our default is "no", but set the following variable to "yes"
-# if you don't want to install magnum. Again: IN THE CONTROLLER !!!
+# Install magnum on the controller only. Our default is "no", but set the following
+# variable to "yes" if you want to install magnum. Again: IN THE CONTROLLER !!!
 magnuminstall="no"
+#
+# VERY IMPORTANT NOTE: Magnum REQUIRES HEAT !. It WONT WORK without heat, so, set
+# "heatinstall" to "yes". Also, if you plan to deploy docker or kubernetes container
+# clusters, you will need persistent storage (Cinder with storage configured and
+# fully available). Also, if you plan to create your cluster templates with local
+# registry, you'll need "swift" too.
+#
 # The magnum host IP: Normally, the controller IP
 magnumhost="192.168.56.60"
 # Change the password and email

@@ -1,3 +1,14 @@
+1.1.1.el7 - March 31, 2017
+
+- Included new variable "tenant_network_types" (set
+  by default to "gre") to add more control to neutron
+  installation module.
+- Added extra information regarding trove and magnum
+  requirements on the main readme and into the main
+  configuration file.
+- Added FIX for missing kubernetes python libraries in
+  magnum install module.
+
 1.1.0.el7 - March 27, 2017
 
 - Included Magnum (Container infrastructure as a

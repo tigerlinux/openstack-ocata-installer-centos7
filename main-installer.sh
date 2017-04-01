@@ -5,8 +5,8 @@
 # E-Mail: TigerLinux@Gmail.com
 #
 # Main Installer Script
-# Version: 1.1.0.el7 "Siberian Lynx"
-# March 27, 2017
+# Version: 1.1.1.el7 "Siberian Lynx"
+# March 31, 2017
 #
 
 PATH=$PATH:/bin:/sbin:/usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin
