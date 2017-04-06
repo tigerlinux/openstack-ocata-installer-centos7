@@ -1,3 +1,13 @@
+1.1.2.el7 - April 06, 2017
+
+- Extra configurations added in order to make
+  interactions between cinder and nova more fool-
+  proof.
+- Added Cinder endpoints for V3 (volumev3).
+- Added extra configuration items for more control
+  in how to delete volumes in Cinder (see main
+  config).
+
 1.1.1.el7 - March 31, 2017
 
 - Included new variable "tenant_network_types" (set

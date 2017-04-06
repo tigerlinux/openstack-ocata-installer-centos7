@@ -65,7 +65,7 @@ openstack user create --domain $keystonedomain --password $cinderpass --email $c
 echo "Cinder Role"
 openstack role add --project $keystoneservicestenant --user $cinderuser $keystoneadminuser
 
-echo "Cinder Services (V1 and V2)"
+echo "Cinder Services (V1, V2 and V3)"
 openstack service create \
         --name $cindersvce \
         --description "OpenStack Block Storage" \
@@ -74,6 +74,10 @@ openstack service create \
         --name $cindersvcev2 \
         --description "OpenStack Block Storage" \
         volumev2
+openstack service create \
+        --name $cindersvcev3 \
+        --description "OpenStack Block Storage" \
+        volumev3
 
 echo "Endpoints for Cinder V1"
 
@@ -96,6 +100,18 @@ openstack endpoint create --region $endpointsregion \
 
 openstack endpoint create --region $endpointsregion \
 	volumev2 admin http://$cinderhost:8776/v2/%\(tenant_id\)s
+
+echo "Endpoints for Cinder V3"
+
+openstack endpoint create --region $endpointsregion \
+        volumev3 public http://$cinderhost:8776/v3/%\(tenant_id\)s
+
+openstack endpoint create --region $endpointsregion \
+        volumev3 internal http://$cinderhost:8776/v3/%\(tenant_id\)s
+
+openstack endpoint create --region $endpointsregion \
+        volumev3 admin http://$cinderhost:8776/v3/%\(tenant_id\)s
+
 
 date > /etc/openstack-control-script-config/keystone-extra-idents-cinder
 

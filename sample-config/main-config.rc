@@ -5,8 +5,8 @@
 # E-Mail: TigerLinux@Gmail.com
 #
 # Main Configuration
-# Version: 1.1.1.el7 "Siberian Lynx"
-# March 31, 2017
+# Version: 1.1.2.el7 "Siberian Lynx"
+# April 06, 2017
 #
 
 #
@@ -314,6 +314,7 @@ cinderhost="192.168.56.60"
 cinderuser="cinder"
 cindersvce="cinder"
 cindersvcev2="cinderv2"
+cindersvcev3="cinderv3"
 cinderpass="0p3nSt4ck"
 cinderemail="cinder@localhost"
 # If your cinder node is a storage host (not all-in-one, not a controller), set the
@@ -376,6 +377,15 @@ default_volume_type="lvm-$cindernodehost"
 cindernodetype="allinone"
 # Please remember: Your first cinder node must be either "allinone" or "controller". Aditional
 # nodes must be set to "storage".
+#
+# Cinder volume clearing mode. Set to "none" or "zero". With "zero", cinder will erase it's volumes
+# at deletion time using a "zero". Set to "none" to just delete the volume without clearing it.
+cindervolclearmode="zero"
+# If you set "cindervolclearmode" to "zero", set how many of the first megabytes to clear. Setting this
+# variable to "0" will clear all the volume (this may take a lot of time). Our default is 50 (first 50
+# megabytes).
+cinderclearmb="50"
+#
 
 
 

@@ -161,6 +161,20 @@ then
 		crudini --set /etc/cinder/cinder.conf lvm-$cindernodehost iscsi_helper tgtadm
 		crudini --set /etc/cinder/cinder.conf lvm-$cindernodehost iscsi_ip_address $cinder_iscsi_ip_address
 		crudini --set /etc/cinder/cinder.conf lvm-$cindernodehost volume_backend_name LVM_iSCSI-$cindernodehost
+		case $cindervolclearmode in
+			"zero")
+				crudini --set /etc/cinder/cinder.conf DEFAULT volume_clear "zero"
+				crudini --set /etc/cinder/cinder.conf DEFAULT volume_clear_size $cinderclearmb
+				crudini --set /etc/cinder/cinder.conf DEFAULT volume_clear_ionice "-c3"
+				crudini --set /etc/cinder/cinder.conf lvm-$cindernodehost volume_clear "zero"
+				crudini --set /etc/cinder/cinder.conf lvm-$cindernodehost volume_clear_size $cinderclearmb
+				crudini --set /etc/cinder/cinder.conf lvm-$cindernodehost volume_clear_ionice "-c3"
+			;;
+			"none")
+				crudini --set /etc/cinder/cinder.conf DEFAULT volume_clear "none"
+				crudini --set /etc/cinder/cinder.conf lvm-$cindernodehost volume_clear "none"
+			;;
+		esac
 	fi
 
 	#if [ $cinderconfigglusterfs == "yes" ]
@@ -188,9 +202,25 @@ then
 		crudini --set /etc/cinder/cinder.conf nfs-$cindernodehost nfs_qcow2_volumes True
 		crudini --set /etc/cinder/cinder.conf nfs-$cindernodehost nfs_snapshot_support True
 		crudini --set /etc/cinder/cinder.conf nfs-$cindernodehost nas_secure_file_operations false
+		crudini --set /etc/cinder/cinder.conf nfs-$cindernodehost nas_secure_file_permissions false
 		crudini --set /etc/cinder/cinder.conf DEFAULT nas_secure_file_operations false
+		crudini --set /etc/cinder/cinder.conf DEFAULT nas_secure_file_permissions false
 		echo $nfsresource > /etc/cinder/nfs_shares
 		chown cinder.cinder /etc/cinder/nfs_shares
+		case $cindervolclearmode in
+			"zero")
+				crudini --set /etc/cinder/cinder.conf DEFAULT volume_clear "zero"
+				crudini --set /etc/cinder/cinder.conf DEFAULT volume_clear_size $cinderclearmb
+				crudini --set /etc/cinder/cinder.conf DEFAULT volume_clear_ionice "-c3"
+				crudini --set /etc/cinder/cinder.conf nfs-$cindernodehost volume_clear "zero"
+				crudini --set /etc/cinder/cinder.conf nfs-$cindernodehost volume_clear_size $cinderclearmb
+				crudini --set /etc/cinder/cinder.conf nfs-$cindernodehost volume_clear_ionice "-c3"
+			;;
+			"none")
+				crudini --set /etc/cinder/cinder.conf DEFAULT volume_clear "none"
+				crudini --set /etc/cinder/cinder.conf nfs-$cindernodehost volume_clear "none"
+			;;
+		esac
 	fi
 
 	backend=""
@@ -255,7 +285,25 @@ crudini --set /etc/cinder/cinder.conf keystone_authtoken user_domain_name $keyst
 crudini --set /etc/cinder/cinder.conf keystone_authtoken project_name $keystoneservicestenant
 crudini --set /etc/cinder/cinder.conf keystone_authtoken username $cinderuser
 crudini --set /etc/cinder/cinder.conf keystone_authtoken password $cinderpass
+crudini --set /etc/cinder/cinder.conf keystone_authtoken region_name $endpointsregion
 crudini --set /etc/cinder/cinder.conf oslo_concurrency lock_path "/var/oslock/cinder"
+#
+# Some failsafe... don't ask (yet)
+#
+source $keystone_admin_rc_file
+domaindefaultid=`openstack domain show default -f value -c id`
+crudini --set /etc/cinder/cinder.conf keystone_authtoken project_domain_id $domaindefaultid
+crudini --set /etc/cinder/cinder.conf keystone_authtoken user_domain_id $domaindefaultid
+crudini --set /etc/cinder/cinder.conf DEFAULT os_privileged_user_name $cinderuser
+crudini --set /etc/cinder/cinder.conf DEFAULT os_privileged_user_password $cinderpass
+crudini --set /etc/cinder/cinder.conf DEFAULT os_privileged_user_auth_url "http://$keystonehost:5000/v2.0/"
+crudini --set /etc/cinder/cinder.conf DEFAULT nova_catalog_info "compute:nova:internalURL"
+crudini --set /etc/cinder/cinder.conf DEFAULT nova_catalog_admin_info "compute:nova:adminURL"
+crudini --set /etc/cinder/cinder.conf DEFAULT os_region_name $endpointsregion
+#
+#
+#
+
  
  
 if [ $ceilometerinstall == "yes" ]
