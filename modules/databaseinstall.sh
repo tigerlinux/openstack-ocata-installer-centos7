@@ -77,6 +77,13 @@ then
 		echo "FLUSH PRIVILEGES;"|mysql
 		iptables -A INPUT -p tcp -m multiport --dports $mysqldbport -j ACCEPT
 		service iptables save
+		mkdir -p /etc/systemd/system/mariadb.service.d/
+		echo "[Service]" > /etc/systemd/system/mariadb.service.d/limits.conf
+		echo "LimitNOFILE=65535" >> /etc/systemd/system/mariadb.service.d/limits.conf
+		echo "mysql hard nofile 65535" > /etc/security/limits.d/10-mariadb.conf
+		echo "mysql soft nofile 65535" >> /etc/security/limits.d/10-mariadb.conf
+		systemctl --system daemon-reload
+		systemctl restart mariadb.service
 		echo "MariaDB Installed"
 		;;
 	"postgres")
