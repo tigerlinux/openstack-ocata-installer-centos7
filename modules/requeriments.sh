@@ -81,6 +81,9 @@ yum -y install python-keystoneclient python-sqlalchemy python-migrate python-psy
 	MySQL-python python-tools sysfsutils sg3_utils genisoimage libguestfs glusterfs \
 	glusterfs-fuse nfs-utils sudo libguestfs-tools-c
 
+yum -y install coreutils grep curl wget redhat-lsb-core net-tools git findutils iproute \
+	grep openssh sed gawk openssl which xz bzip2 util-linux procps-ng which lvm2
+
 yum -y install boost-program-options perl-DBD-MySQL wxBase wxGTK  wxGTK-gl libtool-ltdl \
 	unixODBC python-six python-iso8601 python-babel python-argparse python-oslo-config \
 	python-ordereddict python-webob python-memcached python-oauthlib python-routes \

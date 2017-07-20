@@ -120,8 +120,24 @@ sleep 1
 /usr/local/bin/openstack-log-cleaner.sh auto
 sync
 sleep 1
-/usr/local/bin/openstack-control.sh enable
+/usr/local/bin/openstack-control.sh disable
 /usr/local/bin/openstack-control.sh start
+
+echo "[Unit]" > /etc/systemd/system/openstack-automated.service
+echo "Description=OpenStack AutoStart" >> /etc/systemd/system/openstack-automated.service
+echo "After=network.target rc-local.service rc.local.service" >> /etc/systemd/system/openstack-automated.service
+echo "" >> /etc/systemd/system/openstack-automated.service
+echo "[Service]" >> /etc/systemd/system/openstack-automated.service
+echo "Type=oneshot" >> /etc/systemd/system/openstack-automated.service
+echo "RemainAfterExit=true" >> /etc/systemd/system/openstack-automated.service
+echo "ExecStart=`which bash` -c \"/usr/local/bin/openstack-control.sh start\"" >> /etc/systemd/system/openstack-automated.service
+echo "ExecStop=`which bash` -c \"/usr/local/bin/openstack-control.sh stop\"" >> /etc/systemd/system/openstack-automated.service
+echo "" >> /etc/systemd/system/openstack-automated.service
+echo "[Install]" >> /etc/systemd/system/openstack-automated.service
+echo "WantedBy=multi-user.target" >> /etc/systemd/system/openstack-automated.service
+
+systemctl daemon-reload
+systemctl enable openstack-automated.service
 
 #
 # And we are DONE !!!

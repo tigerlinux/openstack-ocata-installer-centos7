@@ -374,6 +374,7 @@ then
 else
 	date > /etc/openstack-control-script-config/keystone-installed
 	date > /etc/openstack-control-script-config/keystone
+	date > /etc/openstack-control-script-config/keystone-http-service-installed
 fi
 
 checkadmincreate=`openstack user list|awk '{print $4}'|grep -ci ^$keystoneadminuser$`

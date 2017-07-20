@@ -151,12 +151,18 @@ fi
 # Nova. Index=5
 if [ -f /etc/openstack-control-script-config/nova-full-installed ]
 then
+	if [ -f /etc/openstack-control-script-config/keystone-http-service-installed ]
+	then
+		novaapache=""
+	else
+		novaapache="httpd"
+	fi
 	if [ -f /etc/openstack-control-script-config/nova-without-compute ]
 	then
 		svcnova=(
 			"
 			openstack-nova-api
-			httpd
+			$novaapache
 			openstack-nova-scheduler
 			openstack-nova-conductor
 			openstack-nova-consoleauth
@@ -167,7 +173,7 @@ then
 		svcnova=(
 			"
 			openstack-nova-api
-			httpd
+			$novaapache
 			openstack-nova-scheduler
 			openstack-nova-conductor
 			openstack-nova-consoleauth
@@ -200,11 +206,17 @@ fi
 
 if [ -f /etc/openstack-control-script-config/ceilometer-full-installed ]
 then
+	if [ -f /etc/openstack-control-script-config/keystone-http-service-installed ]
+	then
+		ceiloapache=""
+	else
+		ceiloapache="httpd"
+	fi
 	if [ -f /etc/openstack-control-script-config/ceilometer-without-compute ]
 	then
 		svcceilometer=(
 			"
-			httpd
+			$ceiloapache
 			openstack-gnocchi-metricd
 			openstack-ceilometer-central
 			openstack-ceilometer-collector
@@ -217,7 +229,7 @@ then
 	else
 		svcceilometer=(
 			"
-			httpd
+			$ceiloapache
 			openstack-gnocchi-metricd
 			openstack-ceilometer-compute
 			openstack-ceilometer-central

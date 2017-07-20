@@ -504,6 +504,19 @@ NOTE: The "instance-cpu-metrics-report.sh" script has been modified in order to 
 instance-cpu-metrics-report.sh --help
 ```
 
+### SYSTEMD "All-Services" control daemon.
+
+During the postinstall stage, a "systemd" service named "openstack-automated.service" (or openstack-automated for short) is created and activated. This service is configured to start after networking and rc-local/rc.local are started. The service usrs "openstack-control.sh" script described above in order to start/stop all openstack services.
+
+Because this systemd based service is enabled at postinstall time, this will ensure that your openstack installation boot in the most correctly way possible when your system starts. If you want to disable OpenStack autostart at boot-time, just run the following command:
+
+```bash
+systemctl disable openstack-automated.service
+```
+
+You can use "start", "stop", "disable", "enable" and "status" on this service too in order to start, stop, disable, enable or "see status" of the openstack services. The "status" option is very basic. For a more detailed view, use "openstack-control.sh" status.
+
+
 ### More about apache and mod-wsgi.
 
 It's a trend !. OpenStack group is gradually migrating all it's API's services (all services exposing a REST interface) to mod-wsgi trough apache. That means in practical terms, that if you stop apache, several api services will stop working. The afected services are (by the moment):
@@ -512,6 +525,7 @@ It's a trend !. OpenStack group is gradually migrating all it's API's services (
 - cinder-api (only in ubuntu 1604lts packages).
 - aodh-api.
 - gnocchi-api.
+- nova-placement-api.
 
 Eventually all API's will reside inside apache (or nginx) trough any mod-wsgi solution. Please take this into consideration when doing anything with apache.
 
