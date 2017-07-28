@@ -1,4 +1,9 @@
-1.1.4.el7 - June 20, 2017
+1.1.5.el7 - July 28, 2017
+
+- Changed some entries in database installation module
+  in order to make it more "fool-proof".
+
+1.1.4.el7 - July 20, 2017
 
 - Added extra checks for openstack-control.sh script in
   order to allow apache to survice when a stop/restart

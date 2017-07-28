@@ -67,14 +67,17 @@ then
 		sed -i -r "s/^bind-address.*=.*0.0.0.0/bind-address=0.0.0.0\nmax_connections=$dbmaxcons/" /etc/my.cnf.d/galera.cnf
 		systemctl enable mariadb.service
 		systemctl start mariadb.service
-		/usr/bin/mysqladmin -u $mysqldbadm password $mysqldbpassword > /dev/null 2>&1
-		/usr/bin/mysqladmin -u $mysqldbadm -h $dbbackendhost password $mysqldbpassword > /dev/null 2>&1
+		# /usr/bin/mysqladmin -u $mysqldbadm password $mysqldbpassword > /dev/null 2>&1
+		# /usr/bin/mysqladmin -u $mysqldbadm -h $dbbackendhost password $mysqldbpassword > /dev/null 2>&1
+		mysql -e "GRANT ALL PRIVILEGES ON *.* TO '$mysqldbadm'@'%' IDENTIFIED BY '$mysqldbpassword' WITH GRANT OPTION;"
+		mysql -e "FLUSH PRIVILEGES;"
 		sleep 5
 		echo "[client]" > /root/.my.cnf
 		echo "user=$mysqldbadm" >> /root/.my.cnf
 		echo "password=$mysqldbpassword" >> /root/.my.cnf
-		echo "GRANT ALL PRIVILEGES ON *.* TO '$mysqldbadm'@'%' IDENTIFIED BY '$mysqldbpassword' WITH GRANT OPTION;"|mysql
-		echo "FLUSH PRIVILEGES;"|mysql
+		# echo "GRANT ALL PRIVILEGES ON *.* TO '$mysqldbadm'@'%' IDENTIFIED BY '$mysqldbpassword' WITH GRANT OPTION;"|mysql
+		# echo "FLUSH PRIVILEGES;"|mysql
+		# mysql --host $dbbackendhost -e "FLUSH PRIVILEGES;"
 		iptables -A INPUT -p tcp -m multiport --dports $mysqldbport -j ACCEPT
 		service iptables save
 		mkdir -p /etc/systemd/system/mariadb.service.d/
