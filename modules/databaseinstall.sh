@@ -67,19 +67,24 @@ then
 		sed -i -r "s/^bind-address.*=.*0.0.0.0/bind-address=0.0.0.0\nmax_connections=$dbmaxcons/" /etc/my.cnf.d/galera.cnf
 		systemctl enable mariadb.service
 		systemctl start mariadb.service
-		# /usr/bin/mysqladmin -u $mysqldbadm password $mysqldbpassword > /dev/null 2>&1
-		# /usr/bin/mysqladmin -u $mysqldbadm -h $dbbackendhost password $mysqldbpassword > /dev/null 2>&1
-		mysql -e "GRANT ALL PRIVILEGES ON *.* TO '$mysqldbadm'@'%' IDENTIFIED BY '$mysqldbpassword' WITH GRANT OPTION;"
-		mysql -e "FLUSH PRIVILEGES;"
 		sleep 5
+		echo "UPDATE mysql.user SET Password=PASSWORD('$mysqldbpassword') WHERE User='$mysqldbadm';" > /root/os-db.sql
+		echo "DELETE FROM mysql.user WHERE User='';" >> /root/os-db.sql
+		echo "DELETE FROM mysql.user WHERE User='root' AND Host NOT IN ('localhost', '127.0.0.1', '::1');" >> /root/os-db.sql
+		echo "DROP DATABASE IF EXISTS test;" >> /root/os-db.sql
+		echo "GRANT ALL PRIVILEGES ON *.* TO '$mysqldbadm'@'%' IDENTIFIED BY '$mysqldbpassword' WITH GRANT OPTION;" >> /root/os-db.sql
+		echo "DELETE FROM mysql.db WHERE Db='test' OR Db='test\\_%';" >> /root/os-db.sql
+		echo "FLUSH PRIVILEGES;" >> /root/os-db.sql
+		mysql < /root/os-db.sql
+		sleep 5
+		sync
+		rm -f /root/os-db.sql
 		echo "[client]" > /root/.my.cnf
 		echo "user=$mysqldbadm" >> /root/.my.cnf
 		echo "password=$mysqldbpassword" >> /root/.my.cnf
-		# echo "GRANT ALL PRIVILEGES ON *.* TO '$mysqldbadm'@'%' IDENTIFIED BY '$mysqldbpassword' WITH GRANT OPTION;"|mysql
-		# echo "FLUSH PRIVILEGES;"|mysql
-		# mysql --host $dbbackendhost -e "FLUSH PRIVILEGES;"
 		iptables -A INPUT -p tcp -m multiport --dports $mysqldbport -j ACCEPT
 		service iptables save
+		mysql -e "SHOW DATABASES;"
 		mkdir -p /etc/systemd/system/mariadb.service.d/
 		echo "[Service]" > /etc/systemd/system/mariadb.service.d/limits.conf
 		echo "LimitNOFILE=65535" >> /etc/systemd/system/mariadb.service.d/limits.conf

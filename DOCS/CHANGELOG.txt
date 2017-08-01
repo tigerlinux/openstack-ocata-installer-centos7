@@ -1,3 +1,9 @@
+1.1.6.el7 - August 01, 2017
+
+- Changed (again) database installation secuence in
+  order to make it more fool-proof on several host
+  configurations.
+
 1.1.5.el7 - July 28, 2017
 
 - Changed some entries in database installation module
