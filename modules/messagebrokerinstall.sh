@@ -105,10 +105,10 @@ fi
 # If the broker installation was successfull, we proceed to apply IPTABLES rules
 #
 
-echo "Applying IPTABLES Rules"
+# echo "Applying IPTABLES Rules"
 
-iptables -I INPUT -p tcp -m tcp --dport 5672 -j ACCEPT
-service iptables save
+# iptables -I INPUT -p tcp -m tcp --dport 5672 -j ACCEPT
+# service iptables save
 
 echo "Done"
 

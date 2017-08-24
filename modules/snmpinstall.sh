@@ -107,12 +107,12 @@ service snmpd restart
 #
 
 echo ""
-echo "Applying IPTABLES rules"
-echo ""
+# echo "Applying IPTABLES rules"
+# echo ""
 
-iptables -I INPUT -p udp -m udp --dport 161 -j ACCEPT
-iptables -I INPUT -p tcp -m tcp --dport 161 -j ACCEPT
-service iptables save
+# iptables -I INPUT -p udp -m udp --dport 161 -j ACCEPT
+# iptables -I INPUT -p tcp -m tcp --dport 161 -j ACCEPT
+# service iptables save
 
 date > /etc/openstack-control-script-config/snmp
 date > /etc/openstack-control-script-config/snmp-installed

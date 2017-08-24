@@ -103,7 +103,7 @@ sync
 #
 
  
-crudini --set /etc/cinder/cinder.conf DEFAULT osapi_volume_listen 0.0.0.0
+crudini --set /etc/cinder/cinder.conf DEFAULT osapi_volume_listen $cinderhost
 crudini --set /etc/cinder/cinder.conf DEFAULT api_paste_config /etc/cinder/api-paste.ini
 crudini --set /etc/cinder/cinder.conf DEFAULT glance_host $glancehost
 crudini --set /etc/cinder/cinder.conf DEFAULT auth_strategy keystone
@@ -414,10 +414,10 @@ yum -y install python-cinderclient
 echo "Ready"
 
 echo ""
-echo "Applying IPTABLES rules"
+# echo "Applying IPTABLES rules"
 
-iptables -A INPUT -p tcp -m multiport --dports 3260,8776 -j ACCEPT
-service iptables save
+# iptables -A INPUT -p tcp -m multiport --dports 3260,8776 -j ACCEPT
+# service iptables save
 
 #
 # Finally, we proceed to verify if Cinder was installed and if not we set a fail so the

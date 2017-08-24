@@ -91,6 +91,7 @@ then
 		httpd
 
 	cat ./libs/placement/00-nova-placement-api.conf > /etc/httpd/conf.d/00-nova-placement-api.conf
+	sed -r -i "s/Listen\ 8778/Listen\ $novahost:8778/g" /etc/httpd/conf.d/00-nova-placement-api.conf
 else
 	echo ""
 	echo "Nova in COMPUTE node"
@@ -134,13 +135,13 @@ source $keystone_admin_rc_file
 #
 
 echo ""
-echo "Applying IPTABLES rules"
+# echo "Applying IPTABLES rules"
 
-iptables -A INPUT -m state --state NEW -m tcp -p tcp --dport 6080 -j ACCEPT
-iptables -A INPUT -m state --state NEW -m tcp -p tcp --dport 6081 -j ACCEPT
-iptables -A INPUT -p tcp -m multiport --dports 5900:5999 -j ACCEPT
-iptables -A INPUT -p tcp -m multiport --dports 8773,8774,8775 -j ACCEPT
-service iptables save
+# iptables -A INPUT -m state --state NEW -m tcp -p tcp --dport 6080 -j ACCEPT
+# iptables -A INPUT -m state --state NEW -m tcp -p tcp --dport 6081 -j ACCEPT
+# iptables -A INPUT -p tcp -m multiport --dports 5900:5999 -j ACCEPT
+# iptables -A INPUT -p tcp -m multiport --dports 8773,8774,8775 -j ACCEPT
+# service iptables save
 echo ""
 echo "Ready"
 echo ""
@@ -259,18 +260,19 @@ crudini --set /etc/nova/nova.conf placement password $novaplacementuserpass
 # More main config
 #
 
-osapiworkers=`grep processor.\*: /proc/cpuinfo |wc -l`
+# osapiworkers=`grep processor.\*: /proc/cpuinfo |wc -l`
 
 crudini --set /etc/nova/nova.conf DEFAULT compute_driver libvirt.LibvirtDriver
 crudini --set /etc/nova/nova.conf DEFAULT firewall_driver nova.virt.firewall.NoopFirewallDriver
 crudini --set /etc/nova/nova.conf DEFAULT rootwrap_config /etc/nova/rootwrap.conf
-crudini --set /etc/nova/nova.conf DEFAULT osapi_volume_listen 0.0.0.0
+crudini --set /etc/nova/nova.conf DEFAULT osapi_volume_listen $novahost
 crudini --set /etc/nova/nova.conf DEFAULT service_down_time 60
 crudini --set /etc/nova/nova.conf DEFAULT image_service nova.image.glance.GlanceImageService
 crudini --set /etc/nova/nova.conf libvirt use_virtio_for_bridges True
-crudini --set /etc/nova/nova.conf DEFAULT osapi_compute_listen 0.0.0.0
-crudini --set /etc/nova/nova.conf DEFAULT metadata_listen 0.0.0.0
+crudini --set /etc/nova/nova.conf DEFAULT osapi_compute_listen $novahost
+crudini --set /etc/nova/nova.conf DEFAULT metadata_listen $novahost
 crudini --set /etc/nova/nova.conf DEFAULT osapi_compute_workers $osapiworkers
+crudini --set /etc/nova/nova.conf conductor workers $conductorworkers
 crudini --set /etc/nova/nova.conf libvirt vif_driver nova.virt.libvirt.vif.LibvirtGenericVIFDriver
 crudini --set /etc/nova/nova.conf DEFAULT debug False
 crudini --set /etc/nova/nova.conf DEFAULT my_ip $nova_computehost
@@ -318,7 +320,7 @@ crudini --set /etc/nova/nova.conf neutron ovs_bridge $integration_bridge
 case $consoleflavor in
 "vnc")
 	crudini --set /etc/nova/nova.conf vnc enabled True
-	crudini --set /etc/nova/nova.conf vnc novncproxy_host 0.0.0.0
+	crudini --set /etc/nova/nova.conf vnc novncproxy_host $nova_computehost
 	crudini --set /etc/nova/nova.conf vnc vncserver_proxyclient_address $nova_computehost
 	crudini --set /etc/nova/nova.conf vnc novncproxy_base_url "http://$vncserver_controller_address:6080/vnc_auto.html"
 	crudini --set /etc/nova/nova.conf vnc novncproxy_port 6080
@@ -341,7 +343,7 @@ case $consoleflavor in
 	crudini --set /etc/nova/nova.conf vnc enabled False > /dev/null 2>&1
 	crudini --set /etc/nova/nova.conf DEFAULT novnc_enabled False > /dev/null 2>&1
 	crudini --set /etc/nova/nova.conf spice html5proxy_base_url "http://$spiceserver_controller_address:6082/spice_auto.html"
-	crudini --set /etc/nova/nova.conf spice server_listen 0.0.0.0
+	crudini --set /etc/nova/nova.conf spice server_listen $nova_computehost
 	crudini --set /etc/nova/nova.conf spice html5proxy_port 6082
 	crudini --set /etc/nova/nova.conf spice server_proxyclient_address $nova_computehost
 	crudini --set /etc/nova/nova.conf spice enabled True
@@ -520,7 +522,7 @@ sync
 # Nova do some changes to IPTABLES... We just ensure those changes are saved
 #
 
-service iptables save
+# service iptables save
 
 echo ""
 echo "Let's continue"

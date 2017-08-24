@@ -5,9 +5,48 @@
 # E-Mail: TigerLinux@Gmail.com
 #
 # Main Configuration
-# Version: 1.1.6.el7 "Siberian Lynx"
-# August 01, 2017
+# Version: 1.2.0.el7 "Siberian Lynx"
+# August 24, 2017
 #
+
+#
+#
+# SECURITY CONFIGURATION
+#
+# Our OpenStack automated installer applies a lot of IPTABLES rules in order
+# to protect critical services from outside interference.
+# The following variables should be set accordingly to your network:
+#
+# All openstack endpoints will be opened to the following IP or Network.
+# Example:
+# osprivatenetwork="192.168.0.0/16"
+# If you are installing an AIO public server (on packet.net or another datacenter
+# using public IP's) set the variable to the server IP. This will ensure that all
+# your primary services will be closed on only reacheable from inside the server
+# providing and extra measure of protection.
+# If you are installing a multi-server setup with a controller, computes, and storage
+# nodes, set the variable to your private network where all your openstack nodes are
+# connected. Example: osprivatenetwork="192.168.56.0/24"
+# Please, never ever use "0.0.0.0/0" here
+osprivatenetwork="192.168.56.60"
+#
+# Keystone is already exposed to the IP's or Network configured on the "osprivatenetwork"
+# variable, but, you can expose all keystone endpoints (ports 5000 and 35357) to an
+# additional admin network, or even "0.0.0.0/0" if you want your Keystone to be reacheable 
+# from all the world.
+#
+keystoneclientnetwork="192.168.56.60"
+#
+# Manila and Designate are already exposed to any IP or Net included on the
+# "osprivatenetwork" variable. If you want to expose both Manila and Designate services 
+# to a specific/additional network, IP, or to all the world, set the following variables:
+#
+manilaclientnetwork="0.0.0.0/0"
+designateclientnetwork="0.0.0.0/0"
+#
+# Finally, you normally want to expose Horizon to all your nets, but if you want to specicy
+# a single specific administrative network, set the variable to your desired source net:
+horizonclientnetwork="0.0.0.0/0"
 
 #
 # DATABASE SECTION
@@ -242,6 +281,9 @@ swiftsvce="swift"
 swiftpass="0p3nSt4ck"
 swiftemail="swift@localhost"
 #
+# SWIFT Workers. Fine tune your swift workers or let swift to auto-tune (auto setting):
+swiftworkers="auto"
+#
 # Swift extra configuration
 #
 # PLEASE PLEASE PLEASE read Swift Manuals first in you intend to use it
@@ -286,6 +328,10 @@ glanceuser="glance"
 glancesvce="glance"
 glancepass="0p3nSt4ck"
 glanceemail="glance@localhost"
+#
+# Fine tune your glance workers. You can set this to "at least" the actual core number
+# in your controller/glance-server.
+glanceworkers="2"
 #
 # If you want, we can install the cirrus test images. They are very usefull in order to
 # test OpenStack Cloud Services. Our default: yes
@@ -422,6 +468,10 @@ neutronuser="neutron"
 neutronsvce="neutron"
 neutronpass="0p3nSt4ck"
 neutronemail="neutron@localhost"
+#
+# Finetune your neutron API workers here:
+neutronapiworkers="2"
+#
 # This is the most important part of your network configuration. Here, you must
 # select your network mappings. Please, ensure you understand OpenStack
 # network philosophy before you configure this.
@@ -571,6 +621,11 @@ novaplacementemail="placement@localhost"
 # strict.
 extranovahosts=""
 #
+# Nova API Workers to launch. Fine tune your API workers here.
+osapiworkers="2"
+# Nova CONDUCTOR Workers to launch. Fine tune your conductor workers here.
+conductorworkers="2"
+#
 # Over-subscription CPU/RAM/DISK control. Please read in openstack manuals what this mean.
 # You probably want to use those defaults... then again, maybe not.
 ram_allocation_ratio="1.5"
@@ -710,6 +765,11 @@ mongodbttl="604800"
 # the following value in 60 seconds unless you don't plan to use AutoScaling. In that case, set
 # the value to 600 seconds.
 ceilointerval="60"
+#
+# Workers for ceilometer, aodh and gnocchi
+ceilometerworkers="2"
+aodhworkers="2"
+gnocchiworkers="2"
 
 
 
@@ -741,6 +801,9 @@ heatencriptionkey="7a6502a023ff8a3a16fbc2e438bc7ddfd524707cc892c30769f7411b68de4
 # Normally, this is not necessary unless your mysql service access policies are very
 # strict.
 extraheathosts=""
+#
+# HEAT Workers. Fine tune your heatservice workers here:
+heatworkers="2"
 
 
 
@@ -793,6 +856,8 @@ extratrovehosts=""
 # a mandatory component. Ensure to set "swiftinstall" to "yes" if you opt to install trove
 # and need backups and/or replicas.
 #
+# TROVE Workers. Fine tune your trove service workers here:
+troveworkers="2"
 
 
 
@@ -925,6 +990,9 @@ magnum_domain_admin_password="0p3nSt4ck"
 # Normally, this is not necessary unless your mysql service access policies are very
 # strict.
 extramagnumhosts=""
+#
+# Fine tune your magnum API workers here:
+magnumworkers="2"
 
 
 

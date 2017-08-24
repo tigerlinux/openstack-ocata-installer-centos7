@@ -164,6 +164,9 @@ crudini --set /etc/trove/trove.conf DEFAULT swift_service_type object-store
 # crudini --set /etc/trove/trove.conf DEFAULT heat_service_type orchestration
 crudini --set /etc/trove/trove.conf DEFAULT neutron_service_type network
 
+# Workers
+crudini --set /etc/trove/trove.conf DEFAULT trove_api_workers $troveworkers
+
 # Failsafe #1
 crudini --del /etc/trove/trove.conf DEFAULT nova_compute_url
 crudini --del /etc/trove/trove.conf DEFAULT cinder_url
@@ -298,7 +301,7 @@ crudini --set /etc/trove/trove.conf DEFAULT default_datastore $trovedefaultds
 crudini --set /etc/trove/trove.conf DEFAULT add_addresses True
 crudini --set /etc/trove/trove.conf DEFAULT network_label_regex "^NETWORK_LABEL$"
 crudini --set /etc/trove/trove.conf DEFAULT api_paste_config /etc/trove/api-paste.ini
-crudini --set /etc/trove/trove.conf DEFAULT bind_host 0.0.0.0
+crudini --set /etc/trove/trove.conf DEFAULT bind_host $trovehost
 crudini --set /etc/trove/trove.conf DEFAULT bind_port 8779
 crudini --set /etc/trove/trove.conf DEFAULT taskmanager_manager trove.taskmanager.manager.Manager
  
@@ -396,8 +399,8 @@ echo ""
 echo ""
 echo "Applying IPTABLES rules"
 
-iptables -A INPUT -p tcp -m multiport --dports 8779 -j ACCEPT
-service iptables save
+# iptables -A INPUT -p tcp -m multiport --dports 8779 -j ACCEPT
+# service iptables save
 
 echo "Done"
 

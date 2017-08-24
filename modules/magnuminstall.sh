@@ -122,8 +122,9 @@ crudini --set /etc/magnum/magnum.conf DEFAULT debug false
 crudini --set /etc/magnum/magnum.conf DEFAULT log_dir /var/log/magnum
 
 crudini --set /etc/magnum/magnum.conf api port 9511
-crudini --set /etc/magnum/magnum.conf api host 0.0.0.0
+crudini --set /etc/magnum/magnum.conf api host $magnumhost
 crudini --set /etc/magnum/magnum.conf api api_paste_config "/etc/magnum/api-paste.ini"
+crudini --set /etc/magnum/magnum.conf api workers $magnumworkers
 
 #
 # Keystone Authentication
@@ -238,10 +239,10 @@ echo ""
 #
 
 echo ""
-echo "Applying IPTABLES Rules"
+# echo "Applying IPTABLES Rules"
 
-iptables -A INPUT -p tcp -m multiport --dports 9511 -j ACCEPT
-service iptables save
+# iptables -A INPUT -p tcp -m multiport --dports 9511 -j ACCEPT
+# service iptables save
 
 echo "Done"
 

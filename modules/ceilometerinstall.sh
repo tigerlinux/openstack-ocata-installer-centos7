@@ -212,8 +212,8 @@ crudini --set /etc/ceilometer/ceilometer.conf DEFAULT auth_strategy keystone
 crudini --set /etc/ceilometer/ceilometer.conf DEFAULT log_dir /var/log/ceilometer
 crudini --set /etc/ceilometer/ceilometer.conf DEFAULT host `hostname`
 crudini --set /etc/ceilometer/ceilometer.conf DEFAULT pipeline_cfg_file pipeline.yaml
-crudini --set /etc/ceilometer/ceilometer.conf collector workers 2
-crudini --set /etc/ceilometer/ceilometer.conf notification workers 2
+crudini --set /etc/ceilometer/ceilometer.conf collector workers $ceilometerworkers
+crudini --set /etc/ceilometer/ceilometer.conf notification workers $ceilometerworkers
 crudini --set /etc/ceilometer/ceilometer.conf DEFAULT hypervisor_inspector libvirt
  
 crudini --del /etc/ceilometer/ceilometer.conf DEFAULT sql_connection > /dev/null 2>&1
@@ -278,7 +278,7 @@ crudini --set /etc/ceilometer/ceilometer.conf alarm evaluation_service ceilomete
 crudini --set /etc/ceilometer/ceilometer.conf alarm partition_rpc_topic alarm_partition_coordination
 
 crudini --set /etc/ceilometer/ceilometer.conf api port 8777
-crudini --set /etc/ceilometer/ceilometer.conf api host 0.0.0.0
+crudini --set /etc/ceilometer/ceilometer.conf api host $ceilometerhost
  
 crudini --set /etc/ceilometer/ceilometer.conf DEFAULT heat_control_exchange heat
 crudini --set /etc/ceilometer/ceilometer.conf DEFAULT control_exchange ceilometer
@@ -344,6 +344,7 @@ then
 	# mkdir -p /var/www/cgi-bin/ceilometer
 	# cp -v ./libs/ceilometer/app.wsgi /var/www/cgi-bin/ceilometer/app.wsgi
 	cat ./libs/memcached/memcached > /etc/sysconfig/memcached
+	sed -r -i "s/0.0.0.0/$ceilometerhost/g" /etc/sysconfig/memcached
 	systemctl stop memcached
 	systemctl start memcached
 	systemctl enable memcached
@@ -428,8 +429,11 @@ then
 		crudini --set /etc/aodh/aodh.conf service_credentials project_domain_name $keystonedomain
 		crudini --set /etc/aodh/aodh.conf service_credentials user_domain_name $keystonedomain
 		crudini --set /etc/aodh/aodh.conf service_credentials project_name $keystoneservicestenant
+		crudini --set /etc/aodh/aodh.conf evaluator workers $aodhworkers
+		crudini --set /etc/aodh/aodh.conf listener workers $aodhworkers
+		crudini --set /etc/aodh/aodh.conf notifier workers $aodhworkers
 		crudini --set /etc/aodh/aodh.conf api port 8042
-		crudini --set /etc/aodh/aodh.conf api host 0.0.0.0
+		crudini --set /etc/aodh/aodh.conf api host $aodhhost
 		crudini --set /etc/aodh/aodh.conf api paste_config api_paste.ini
 		crudini --set /etc/aodh/aodh.conf DEFAULT transport_url rabbit://$brokeruser:$brokerpass@$messagebrokerhost:5672/$brokervhost
 		crudini --set /etc/aodh/aodh.conf DEFAULT rpc_backend rabbit
@@ -455,9 +459,11 @@ then
 
 		yum -y install mod_wsgi memcached python-memcached httpd
 		cp -v ./libs/aodh/wsgi-aodh.conf /etc/httpd/conf.d/
+		sed -r -i "s/Listen\ 8042/Listen\ $aodhhost:8042/g" /etc/httpd/conf.d/wsgi-aodh.conf
 		mkdir -p /var/www/cgi-bin/aodh
 		cp -v ./libs/aodh/app.wsgi /var/www/cgi-bin/aodh/app.wsgi
 		cat ./libs/memcached/memcached > /etc/sysconfig/memcached
+		sed -r -i "s/0.0.0.0/$aodhhost/g" /etc/sysconfig/memcached
 		systemctl enable httpd
 		systemctl stop memcached
 		systemctl start memcached
@@ -517,10 +523,12 @@ then
 	# crudini --set /etc/gnocchi/gnocchi.conf DEFAULT verbose false
 	crudini --set /etc/gnocchi/gnocchi.conf DEFAULT log_file /var/log/gnocchi/gnocchi.log
 
-	crudini --set /etc/gnocchi/gnocchi.conf api host 0.0.0.0
+	crudini --set /etc/gnocchi/gnocchi.conf api host $gnocchihost
 	crudini --set /etc/gnocchi/gnocchi.conf api port 8041
 	crudini --set /etc/gnocchi/gnocchi.conf api paste_config /etc/gnocchi/api-paste.ini
 	crudini --set /etc/gnocchi/gnocchi.conf api auth_mode keystone
+
+	crudini --set /etc/gnocchi/gnocchi.conf metricd workers $gnocchiworkers
 
 	case $dbflavor in
 	"mysql")
@@ -571,6 +579,7 @@ then
 	systemctl disable openstack-gnocchi-api
 
 	cp -v ./libs/gnocchi/wsgi-gnocchi.conf /etc/httpd/conf.d/
+	sed -r -i "s/Listen\ 8041/Listen\ $gnocchihost:8041/g" /etc/httpd/conf.d/wsgi-gnocchi.conf
 	mkdir -p /var/www/cgi-bin/gnocchi
 	cp -v ./libs/gnocchi/app.wsgi /var/www/cgi-bin/gnocchi/app.wsgi
 	systemctl enable httpd
@@ -612,10 +621,10 @@ then
 fi
 
 echo ""
-echo "Applying IPTABLES Rules"
+# echo "Applying IPTABLES Rules"
 
-iptables -A INPUT -p tcp -m multiport --dports 8777,8041,8042,$mondbport -j ACCEPT
-service iptables save
+# iptables -A INPUT -p tcp -m multiport --dports 8777,8041,8042,$mondbport -j ACCEPT
+# service iptables save
 
 echo "Ready..."
 

@@ -290,8 +290,20 @@ service memcached restart
 
 echo "Cleaning IPTABLES"
 
+# service iptables stop
+# echo "" > /etc/sysconfig/iptables
+
+iptables -F
+iptables -P INPUT ACCEPT
+iptables -P FORWARD ACCEPT
+iptables -P OUTPUT ACCEPT
+iptables -t nat -F
+iptables -t mangle -F
+iptables -F
+iptables -X
 service iptables stop
-echo "" > /etc/sysconfig/iptables
+service iptables save
+service iptables start
 
 #
 # Kill all database related software and content, if we choose to do it in our config file

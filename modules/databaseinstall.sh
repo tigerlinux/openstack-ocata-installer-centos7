@@ -82,8 +82,8 @@ then
 		echo "[client]" > /root/.my.cnf
 		echo "user=$mysqldbadm" >> /root/.my.cnf
 		echo "password=$mysqldbpassword" >> /root/.my.cnf
-		iptables -A INPUT -p tcp -m multiport --dports $mysqldbport -j ACCEPT
-		service iptables save
+		# iptables -A INPUT -p tcp -m multiport --dports $mysqldbport -j ACCEPT
+		# service iptables save
 		mysql -e "SHOW DATABASES;"
 		mkdir -p /etc/systemd/system/mariadb.service.d/
 		echo "[Service]" > /etc/systemd/system/mariadb.service.d/limits.conf
@@ -115,8 +115,8 @@ then
 		sync
 		echo "*:*:*:$psqldbadm:$psqldbpassword" > /root/.pgpass
 		chmod 0600 /root/.pgpass
-		iptables -A INPUT -p tcp -m multiport --dports $psqldbport -j ACCEPT
-		service iptables save
+		# iptables -A INPUT -p tcp -m multiport --dports $psqldbport -j ACCEPT
+		# service iptables save
 		echo "PostgreSQL Installed"
 		;;
 	esac

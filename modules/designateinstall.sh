@@ -212,16 +212,16 @@ esac
 #
 
 crudini --set /etc/designate/designate.conf DEFAULT transport_url rabbit://$brokeruser:$brokerpass@$messagebrokerhost:5672/$brokervhost
-# crudini --set /etc/designate/designate.conf DEFAULT rpc_backend rabbit
-# crudini --set /etc/designate/designate.conf oslo_messaging_rabbit rabbit_host $messagebrokerhost
-# crudini --set /etc/designate/designate.conf oslo_messaging_rabbit rabbit_password $brokerpass
-# crudini --set /etc/designate/designate.conf oslo_messaging_rabbit rabbit_userid $brokeruser
-# crudini --set /etc/designate/designate.conf oslo_messaging_rabbit rabbit_port 5672
-# crudini --set /etc/designate/designate.conf oslo_messaging_rabbit rabbit_use_ssl false
-# crudini --set /etc/designate/designate.conf oslo_messaging_rabbit rabbit_virtual_host $brokervhost
-# crudini --set /etc/designate/designate.conf oslo_messaging_rabbit rabbit_max_retries 0
-# crudini --set /etc/designate/designate.conf oslo_messaging_rabbit rabbit_retry_interval 1
-# crudini --set /etc/designate/designate.conf oslo_messaging_rabbit rabbit_ha_queues false
+crudini --set /etc/designate/designate.conf DEFAULT rpc_backend rabbit
+crudini --set /etc/designate/designate.conf oslo_messaging_rabbit rabbit_host $messagebrokerhost
+crudini --set /etc/designate/designate.conf oslo_messaging_rabbit rabbit_password $brokerpass
+crudini --set /etc/designate/designate.conf oslo_messaging_rabbit rabbit_userid $brokeruser
+crudini --set /etc/designate/designate.conf oslo_messaging_rabbit rabbit_port 5672
+crudini --set /etc/designate/designate.conf oslo_messaging_rabbit rabbit_use_ssl false
+crudini --set /etc/designate/designate.conf oslo_messaging_rabbit rabbit_virtual_host $brokervhost
+crudini --set /etc/designate/designate.conf oslo_messaging_rabbit rabbit_max_retries 0
+crudini --set /etc/designate/designate.conf oslo_messaging_rabbit rabbit_retry_interval 1
+crudini --set /etc/designate/designate.conf oslo_messaging_rabbit rabbit_ha_queues false
 
 #
 # Designate Agent (we are not using it now, but just to be prepared for the future...
@@ -268,11 +268,11 @@ su -s /bin/sh -c "designate-manage database sync" designate
 #
 
 echo ""
-echo "Applying IPTABLES rules"
+# echo "Applying IPTABLES rules"
 
-iptables -A INPUT -p tcp -m multiport --dports 9001,5354,53 -j ACCEPT
-iptables -A INPUT -p udp -m multiport --dports 5354,53 -j ACCEPT
-service iptables save
+# iptables -A INPUT -p tcp -m multiport --dports 9001,5354,53 -j ACCEPT
+# iptables -A INPUT -p udp -m multiport --dports 5354,53 -j ACCEPT
+# service iptables save
 
 #
 # And proceed to provision our default pool and TLD's

@@ -208,10 +208,10 @@ sleep 5
 #
 
 echo ""
-echo "Applying IPTABLES rules"
+# echo "Applying IPTABLES rules"
 
-iptables -A INPUT -p tcp -m multiport --dports 8786,111,2049,445,139 -j ACCEPT
-service iptables save
+# iptables -A INPUT -p tcp -m multiport --dports 8786,111,2049,445,139 -j ACCEPT
+# service iptables save
 
 #
 # Now, if we choose to enable the LVM backend, we proceed to add it's configuration

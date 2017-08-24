@@ -131,11 +131,20 @@ crudini --set /etc/heat/heat.conf DEFAULT deferred_auth_method trusts
 
 crudini --set /etc/heat/heat.conf DEFAULT use_syslog False
  
-crudini --set /etc/heat/heat.conf heat_api_cloudwatch bind_host 0.0.0.0
+crudini --set /etc/heat/heat.conf heat_api_cloudwatch bind_host $heathost
 crudini --set /etc/heat/heat.conf heat_api_cloudwatch bind_port 8003
  
-crudini --set /etc/heat/heat.conf heat_api bind_host 0.0.0.0
+crudini --set /etc/heat/heat.conf heat_api bind_host $heathost
 crudini --set /etc/heat/heat.conf heat_api bind_port 8004
+
+crudini --set /etc/heat/heat.conf heat_api_cfn bind_host $heathost
+crudini --set /etc/heat/heat.conf heat_api_cfn bind_port 8000
+
+# Workers
+crudini --set /etc/heat/heat.conf DEFAULT num_engine_workers $heatworkers
+crudini --set /etc/heat/heat.conf heat_api workers $heatworkers
+crudini --set /etc/heat/heat.conf heat_api_cfn workers $heatworkers
+crudini --set /etc/heat/heat.conf heat_api_cloudwatch workers $heatworkers
 
 #
 # Keystone Authentication
@@ -238,10 +247,10 @@ echo ""
 #
 
 echo ""
-echo "Applying IPTABLES Rules"
+# echo "Applying IPTABLES Rules"
 
-iptables -A INPUT -p tcp -m multiport --dports 8000,8004 -j ACCEPT
-service iptables save
+# iptables -A INPUT -p tcp -m multiport --dports 8000,8004 -j ACCEPT
+# service iptables save
 
 echo "Done"
 

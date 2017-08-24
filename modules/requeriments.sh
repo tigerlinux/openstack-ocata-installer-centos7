@@ -292,16 +292,19 @@ else
 	service iptables restart >/dev/null 2>&1
 	systemctl start arptables
 	systemctl enable arptables
+	systemctl enable iptables
 
 	sed -i.ori 's/#listen_tls = 0/listen_tls = 0/g' /etc/libvirt/libvirtd.conf
 	sed -i 's/#listen_tcp = 1/listen_tcp = 1/g' /etc/libvirt/libvirtd.conf
 	sed -i 's/#auth_tcp = "sasl"/auth_tcp = "none"/g' /etc/libvirt/libvirtd.conf
+	sed -i "s/^#listen_addr\ =.*/listen_addr\ =\ \"$nova_computehost\"/g" /etc/libvirt/libvirtd.conf
 	sed -i.ori 's/#LIBVIRTD_ARGS="--listen"/LIBVIRTD_ARGS="--listen"/g' /etc/sysconfig/libvirtd
 
 	systemctl restart libvirtd
-	iptables -A INPUT -p tcp -m multiport --dports 22 -j ACCEPT
-	iptables -A INPUT -p tcp -m multiport --dports 16509 -j ACCEPT
-	service iptables save
+	# iptables -A INPUT -p tcp -m multiport --dports 22 -j ACCEPT
+	# iptables -A INPUT -p tcp -m multiport --dports 16509 -j ACCEPT
+	# service iptables save
+	./modules/firewall-master-reset.sh
 
 	date > /etc/openstack-control-script-config/libvirt-installed
 	echo ""

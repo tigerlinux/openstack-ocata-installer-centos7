@@ -31,6 +31,50 @@ First thing to do: Copy the **"main-config.rc"** file from **"sample-config"** d
 
 The installer has a central configuration file: `./configs/main-config.rc`. This file is well documented so, if you did your homework and studied about OpenStack, you will know what to change there. There are very obvious things like passwords, IP addresses, modules to install and dns domains or domain names.
 
+**NOTE:** At the very beginning of the config file, you'll find the following section:
+
+```bash
+#
+# SECURITY CONFIGURATION
+#
+# Our OpenStack automated installer applies a lot of IPTABLES rules in order
+# to protect critical services from outside interference.
+# The following variables should be set accordingly to your network:
+#
+# All openstack endpoints will be opened to the following IP or Network.
+# Example:
+# osprivatenetwork="192.168.0.0/16"
+# If you are installing an AIO public server (on packet.net or another datacenter
+# using public IP's) set the variable to the server IP. This will ensure that all
+# your primary services will be closed on only reacheable from inside the server
+# providing and extra measure of protection.
+# If you are installing a multi-server setup with a controller, computes, and storage
+# nodes, set the variable to your private network where all your openstack nodes are
+# connected. Example: osprivatenetwork="192.168.56.0/24"
+# Please, never ever use "0.0.0.0/0" here
+osprivatenetwork="192.168.56.60"
+#
+# Keystone is already exposed to the IP's or Network configured on the "osprivatenetwork"
+# variable, but, you can expose all keystone endpoints (ports 5000 and 35357) to an
+# additional admin network, or even "0.0.0.0/0" if you want your Keystone to be reacheable
+# from all the world.
+#
+keystoneclientnetwork="192.168.56.60"
+#
+# Manila and Designate are already exposed to any IP or Net included on the
+# "osprivatenetwork" variable. If you want to expose both Manila and Designate services
+# to a specific/additional network, IP, or to all the world, set the following variables:
+#
+manilaclientnetwork="0.0.0.0/0"
+designateclientnetwork="0.0.0.0/0"
+#
+# Finally, you normally want to expose Horizon to all your nets, but if you want to specicy
+# a single specific administrative network, set the variable to your desired source net:
+horizonclientnetwork="0.0.0.0/0"
+```
+
+**If you fail to properly configure those four variables (specially the one named "osprivatenetwork") you'll end with a non-working OpenStack system.**
+
 In the version by default, the configuration file has selections modules to install what is known as an **"all-in-one"** (an OpenStack monolithic service with controller-compute capabilites). You can just change the IP with the one assigned to your server (please DO NOT use *localhost* and DO NOT use a Dynamic DHCP assigned IP).
 
 Additionally, there are some modules that are in default "no":

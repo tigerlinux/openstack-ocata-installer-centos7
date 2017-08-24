@@ -1,3 +1,12 @@
+1.2.0.el7 - August 24, 2017
+
+- Completely reworked security model.
+- Added extra variables on the main-config.rc file
+  used to fine-tune iptables rules applied to the
+  openstack server.
+- Added new variables on the main-config.rc file used
+  to fine-tune workers on most openstack modules.
+
 1.1.6.el7 - August 01, 2017
 
 - Changed (again) database installation secuence in

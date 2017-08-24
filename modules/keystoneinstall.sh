@@ -108,6 +108,7 @@ yum -y install python-openstackclient
 #
 
 cat ./libs/memcached/memcached > /etc/sysconfig/memcached
+sed -r -i "s/0.0.0.0/$keystonehost/g" /etc/sysconfig/memcached
 
 systemctl enable memcached
 systemctl stop memcached
@@ -218,6 +219,7 @@ systemctl stop openstack-keystone.service > /dev/null 2>&1
 systemctl disable openstack-keystone.service > /dev/null 2>&1
 
 cat ./libs/memcached/memcached > /etc/sysconfig/memcached
+sed -r -i "s/0.0.0.0/$keystonehost/g" /etc/sysconfig/memcached
 
 systemctl stop memcached
 systemctl start memcached
@@ -249,6 +251,10 @@ restorecon /var/www/cgi-bin
 usermod -a -G keystone apache
 #
 #
+
+sed -r -i "s/Listen\ 5000/Listen\ $keystonehost:5000/g" /etc/httpd/conf.d/wsgi-keystone.conf
+sed -r -i "s/Listen\ 35357/Listen\ $keystonehost:35357/g" /etc/httpd/conf.d/wsgi-keystone.conf
+
 systemctl start httpd.service
 systemctl restart httpd.service
 systemctl enable httpd.service
@@ -359,10 +365,10 @@ openstack role list
 #
 
 echo ""
-echo "Applying IPTABLES rules"
+# echo "Applying IPTABLES rules"
 
-iptables -A INPUT -p tcp -m multiport --dports 5000,11211,35357 -j ACCEPT
-service iptables save
+# iptables -A INPUT -p tcp -m multiport --dports 5000,11211,35357 -j ACCEPT
+# service iptables save
 
 keystonetest=`rpm -qi openstack-keystone|grep -ci "is not installed"`
 if [ $keystonetest == "1" ]

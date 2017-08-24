@@ -135,8 +135,8 @@ source $keystone_admin_rc_file
 # We apply IPTABLES rules
 #
 
-iptables -A INPUT -p tcp -m multiport --dports 6000,6001,6002,873 -j ACCEPT
-service iptables save
+# iptables -A INPUT -p tcp -m multiport --dports 6000,6001,6002,873 -j ACCEPT
+# service iptables save
 
 #
 # We need to fix permissions and selinux
@@ -185,9 +185,6 @@ crudini --set /etc/swift/swift.conf swift-hash swift_hash_path_prefix $(openssl 
 crudini --set /etc/swift/swift.conf "storage-policy:0" name Policy-0
 crudini --set /etc/swift/swift.conf "storage-policy:0" default yes
  
-#swiftworkers=`grep processor.\*: /proc/cpuinfo |wc -l`
-swiftworkers="auto"
-
 mkdir -p "/var/cache/swift"
 chmod 0700 /var/cache/swift
 chown -R swift:swift /var/cache/swift
@@ -231,6 +228,7 @@ crudini --set /etc/swift/container-server.conf "filter:recon" recon_cache_path "
 #
 
 crudini --set /etc/swift/proxy-server.conf DEFAULT bind_port 8080
+crudini --set /etc/swift/proxy-server.conf DEFAULT bind_ip $swifthost
 crudini --set /etc/swift/proxy-server.conf DEFAULT user swift
 crudini --set /etc/swift/proxy-server.conf DEFAULT swift_dir /etc/swift
 crudini --set /etc/swift/proxy-server.conf DEFAULT workers $swiftworkers
@@ -316,6 +314,7 @@ systemctl start \
 #
 
 cat ./libs/memcached/memcached > /etc/sysconfig/memcached
+sed -r -i "s/0.0.0.0/$swifthost/g" /etc/sysconfig/memcached
 
 systemctl stop memcached
 systemctl start memcached
@@ -407,8 +406,8 @@ sync
 # More IPTABLES rules to apply
 #
 
-iptables -A INPUT -p tcp -m multiport --dports 8080,11211 -j ACCEPT
-service iptables save
+# iptables -A INPUT -p tcp -m multiport --dports 8080,11211 -j ACCEPT
+# service iptables save
 
 #
 # We proceed to make a final full restart of all swift related services

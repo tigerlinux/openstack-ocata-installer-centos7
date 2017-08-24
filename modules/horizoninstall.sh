@@ -215,11 +215,11 @@ echo ""
 
 echo "Done"
 echo ""
-echo "Applying IPTABLES rules"
-echo ""
+# echo "Applying IPTABLES rules"
+# echo ""
 
-iptables -A INPUT -p tcp -m multiport --dports 80,443,11211 -j ACCEPT
-service iptables save
+# iptables -A INPUT -p tcp -m multiport --dports 80,443,11211 -j ACCEPT
+# service iptables save
 
 echo "Ready"
 echo ""
@@ -268,6 +268,7 @@ fi
 
 
 cat ./libs/memcached/memcached > /etc/sysconfig/memcached
+sed -r -i "s/0.0.0.0/$horizonhost/g" /etc/sysconfig/memcached
 systemctl enable memcached
 systemctl stop memcached
 systemctl start memcached

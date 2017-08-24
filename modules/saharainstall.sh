@@ -194,10 +194,10 @@ echo ""
 #
 
 echo ""
-echo "Applying IPTABLES rules"
+# echo "Applying IPTABLES rules"
 
-iptables -A INPUT -p tcp -m multiport --dports 8386 -j ACCEPT
-service iptables save
+# iptables -A INPUT -p tcp -m multiport --dports 8386 -j ACCEPT
+# service iptables save
 
 echo "Done"
 

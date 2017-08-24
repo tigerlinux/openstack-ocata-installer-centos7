@@ -204,14 +204,14 @@ source $keystone_admin_rc_file
 #
 
 echo ""
-echo "Applying IPTABLES Rules"
-iptables -A INPUT -p tcp -m multiport --dports 9696 -j ACCEPT
-iptables -A INPUT -p udp -m state --state NEW -m udp --dport 67 -j ACCEPT
-iptables -A INPUT -p udp -m state --state NEW -m udp --dport 68 -j ACCEPT
-iptables -A INPUT -p udp -m state --state NEW -m udp --dport 4789 -j ACCEPT
-iptables -t mangle -A POSTROUTING -p udp -m udp --dport 67 -j CHECKSUM --checksum-fill
-iptables -t mangle -A POSTROUTING -p udp -m udp --dport 68 -j CHECKSUM --checksum-fill
-service iptables save
+# echo "Applying IPTABLES Rules"
+# iptables -A INPUT -p tcp -m multiport --dports 9696 -j ACCEPT
+# iptables -A INPUT -p udp -m state --state NEW -m udp --dport 67 -j ACCEPT
+# iptables -A INPUT -p udp -m state --state NEW -m udp --dport 68 -j ACCEPT
+# iptables -A INPUT -p udp -m state --state NEW -m udp --dport 4789 -j ACCEPT
+# iptables -t mangle -A POSTROUTING -p udp -m udp --dport 67 -j CHECKSUM --checksum-fill
+# iptables -t mangle -A POSTROUTING -p udp -m udp --dport 68 -j CHECKSUM --checksum-fill
+# service iptables save
 echo "Done"
 
 echo ""
@@ -230,7 +230,7 @@ echo "#" >> /etc/neutron/neutron.conf
 
 crudini --set /etc/neutron/neutron.conf DEFAULT debug False
 crudini --set /etc/neutron/neutron.conf DEFAULT log_dir /var/log/neutron
-crudini --set /etc/neutron/neutron.conf DEFAULT bind_host 0.0.0.0
+crudini --set /etc/neutron/neutron.conf DEFAULT bind_host $neutronhost
 crudini --set /etc/neutron/neutron.conf DEFAULT bind_port 9696
 crudini --set /etc/neutron/neutron.conf DEFAULT core_plugin ml2
 crudini --set /etc/neutron/neutron.conf DEFAULT auth_strategy keystone
@@ -302,8 +302,8 @@ crudini --set /etc/neutron/neutron.conf DEFAULT nova_url http://$novahost:8774/v
 crudini --set /etc/neutron/neutron.conf DEFAULT report_interval 20
 crudini --set /etc/neutron/neutron.conf DEFAULT notification_driver neutron.openstack.common.notifier.rpc_notifier
 
-cpuworkers=`cat /proc/cpuinfo |grep processor|wc -l`
-crudini --set /etc/neutron/neutron.conf DEFAULT api_workers $cpuworkers
+# cpuworkers=`cat /proc/cpuinfo |grep processor|wc -l`
+crudini --set /etc/neutron/neutron.conf DEFAULT api_workers $neutronapiworkers
 
 #
 # Nova section
@@ -867,7 +867,7 @@ echo ""
 sync
 sleep 10
 sync
-service iptables save
+# service iptables save
 
 echo "Let's continue"
 

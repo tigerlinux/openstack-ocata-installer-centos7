@@ -1,5 +1,5 @@
 Installer Version:
 
-1.1.6.el7 "Siberian Lynx"
+1.2.0.el7 "Siberian Lynx"
 
 ONLY FOR OPENSTACK RELEASE 15 "OCATA"
