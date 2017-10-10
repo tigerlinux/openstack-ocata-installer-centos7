@@ -108,6 +108,14 @@ echo "Configurig Horizon"
 
 mkdir -p /etc/openstack-dashboard
 cp /etc/openstack-dashboard/local_settings /etc/openstack-dashboard/local_settings.ORIGINAL-CENTOS7
+#
+# BugFIx - October 09, 2017
+# Dashboard Centos 7.4 FIX
+cat /etc/httpd/conf.d/openstack-dashboard.conf > /root/openstack-dashboard.conf.original
+cat ./libs/horizon/openstack-dashboard.conf > /etc/httpd/conf.d/openstack-dashboard.conf
+# End of FIX
+# 
+
 cat ./libs/local_settings >  /etc/openstack-dashboard/local_settings
 
 mkdir /var/log/horizon > /dev/null 2>&1

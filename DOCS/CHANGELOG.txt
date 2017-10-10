@@ -1,3 +1,13 @@
+1.2.1.el7 - October 09, 2017
+
+- Added temporary fix for Horizon "internal error"
+  caused by some updated package on Centos 7.4.
+  Note that while we could not determine the exact
+  package causing the problem, we could apply a
+  very effective fix. This fix is, again, temporary.
+  When either Centos people or RDO people fix the
+  problem, we'll remove the temporary fix.
+
 1.2.0.el7 - August 24, 2017
 
 - Completely reworked security model.
