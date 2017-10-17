@@ -58,33 +58,45 @@ openstack-glance-api
 )
 
 # Cinder. Index=3
-cindernodetype=`cat /etc/openstack-control-script-config/cinder-nodetype`
-case $cindernodetype in
-"allinone")
+if [ -f /etc/openstack-control-script-config/cinder-nodetype ]
+then
+	cindernodetype=`cat /etc/openstack-control-script-config/cinder-nodetype`
+	case $cindernodetype in
+	"allinone")
+		svccinder=(
+		"
+		openstack-cinder-api
+		openstack-cinder-scheduler
+		openstack-cinder-volume
+		"
+		)
+		;;
+	"controller")
+		svccinder=(
+		"
+		openstack-cinder-api
+		openstack-cinder-scheduler
+		"
+		)
+		;;
+	"storage")
+		svccinder=(
+		"
+		openstack-cinder-volume
+		"
+		)
+		;;
+	esac
+else
 	svccinder=(
-	"
-	openstack-cinder-api
-	openstack-cinder-scheduler
-	openstack-cinder-volume
-	"
-	)
-	;;
-"controller")
-	svccinder=(
-	"
-	openstack-cinder-api
-	openstack-cinder-scheduler
-	"
-	)
-	;;
-"storage")
-	svccinder=(
-	"
-	openstack-cinder-volume
-	"
-	)
-	;;
-esac
+        "
+        openstack-cinder-api
+        openstack-cinder-scheduler
+        openstack-cinder-volume
+        "
+        )
+
+fi
 
 
 # Neutron. Index=4

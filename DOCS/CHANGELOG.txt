@@ -1,3 +1,10 @@
+1.2.2.el7 - October 17, 2017
+
+- Added missing nova-placement port on firewall master
+  script.
+- Updated cinder-services sequence on openstack-control.sh
+  script.
+
 1.2.1.el7 - October 09, 2017
 
 - Added temporary fix for Horizon "internal error"

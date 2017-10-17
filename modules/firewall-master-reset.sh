@@ -157,7 +157,7 @@ then
 	iptables -A INPUT -s $osprivatenetwork -m state --state NEW -m tcp -p tcp --dport 6081 -j ACCEPT
 	iptables -A INPUT -s $osprivatenetwork -m state --state NEW -m tcp -p tcp --dport 6082 -j ACCEPT
 	iptables -A INPUT -s $nova_computehost -p tcp -m multiport --dports 5900:5999 -j ACCEPT
-	iptables -A INPUT -s $osprivatenetwork -p tcp -m multiport --dports 8773,8774,8775 -j ACCEPT
+	iptables -A INPUT -s $osprivatenetwork -p tcp -m multiport --dports 8773,8774,8775,8778 -j ACCEPT
 	iptables -A INPUT -s $osprivatenetwork -m state --state NEW -m tcp -p tcp --dport 16509 -j ACCEPT
 fi
 
