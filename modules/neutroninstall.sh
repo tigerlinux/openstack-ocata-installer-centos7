@@ -470,6 +470,9 @@ crudini --set /etc/neutron/plugins/ml2/ml2_conf.ini agent tunnel_types "gre,vxla
 crudini --set /etc/neutron/plugins/ml2/ml2_conf.ini agent vxlan_udp_port "4789"
 crudini --set /etc/neutron/plugins/ml2/ml2_conf.ini agent l2_population True
 
+crudini --set /etc/neutron/plugins/ml2/ml2_conf.ini agent dont_fragment False
+crudini --set /etc/neutron/plugins/ml2/ml2_conf.ini agent enable_distributed_routing True
+
 crudini --set /etc/neutron/plugins/ml2/ml2_conf.ini ml2_type_vxlan vxlan_group "239.1.1.1"
 crudini --set /etc/neutron/plugins/ml2/ml2_conf.ini ml2_type_vxlan vni_ranges $vni_ranges
 crudini --set /etc/neutron/plugins/ml2/ml2_conf.ini ml2_type_gre tunnel_id_ranges $tunnel_id_ranges

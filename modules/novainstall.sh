@@ -473,6 +473,9 @@ then
 	systemctl start openstack-nova-consoleauth
 	systemctl enable openstack-nova-consoleauth
 
+	systemctl start openstack-nova-console
+	systemctl enable openstack-nova-console
+
 	systemctl start $consolesvc
 	systemctl enable $consolesvc
 

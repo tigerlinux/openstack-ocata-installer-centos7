@@ -1,3 +1,11 @@
+1.2.3.el7 - November 01, 2017
+
+- Added extra firewall rules to open vncproxy/spicehtml5 ports
+  to the same origin network used by Horizon.
+- Added openstack-nova-console service to nova install module
+  and openstack-control.sh script.
+- Added extra config items to neutron install module.
+
 1.2.2.el7 - October 17, 2017
 
 - Added missing nova-placement port on firewall master

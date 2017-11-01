@@ -178,6 +178,7 @@ then
 			openstack-nova-scheduler
 			openstack-nova-conductor
 			openstack-nova-consoleauth
+			openstack-nova-console
 			$consolesvc
 			"
 		)
@@ -189,6 +190,7 @@ then
 			openstack-nova-scheduler
 			openstack-nova-conductor
 			openstack-nova-consoleauth
+			openstack-nova-console
 			$consolesvc
 			openstack-nova-compute
 			"
