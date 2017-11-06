@@ -1,3 +1,8 @@
+1.2.4.el7 - November 06, 2017
+
+- Changed "ovs_use_veth" to False on all sections of neutron
+  installation module.
+
 1.2.3.el7 - November 01, 2017
 
 - Added extra firewall rules to open vncproxy/spicehtml5 ports
