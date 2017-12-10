@@ -1,3 +1,11 @@
+1.2.4.1.el7 - December 10, 2017
+
+- Corrected epel-repo installation instructions on documetation
+  notes.
+- Corrected some typos on "trove-sahara-lbaasv2-dashboard-install.txt"
+  document.
+
+
 1.2.4.el7 - November 06, 2017
 
 - Changed "ovs_use_veth" to False on all sections of neutron

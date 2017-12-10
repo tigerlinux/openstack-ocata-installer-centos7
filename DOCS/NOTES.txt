@@ -19,7 +19,7 @@ attempt to use it in another environment.
 
 Install your centos 7 server with 64 bits and select the packages for a basic infraestructure server without
 graphics environment. Do not include any extra repo like EPEL, ELREPO or RPMFORGE "yet", but you'll need to
-include EPEL along the Newton RDO Repo.
+include EPEL along the Ocata RDO Repo.
 
 If you are going to use a "Cinder Volume", remember to reserve the disk space for it.
 
@@ -29,15 +29,11 @@ Centos:
 
 yum install centos-release-openstack-ocata
 
-RHEL:
-
-yum install https://rdoproject.org/repos/rdo-release.rpm
-
 Install EPEL:
 
-yum -y install http://dl.fedoraproject.org/pub/epel/7/x86_64/e/epel-release-7-9.noarch.rpm
+yum -y install epel-release
 
-After installing RDO Newton and EPEL Repos, do a full update and reboot if necessary (new kernel installed):
+After installing RDO Ocata and EPEL Repos, do a full update and reboot if necessary (new kernel installed):
 
 yum -y upgrade
 reboot
